@@ -421,6 +421,268 @@ textarea.inp{resize:vertical; min-height:150px; line-height:1.9}
 }
 
 @media (prefers-reduced-motion:reduce){ *{animation:none!important; transition:none!important} }
+
+/* =========================================================
+   v2 · MODULES (team · waste · inventory · counter · card)
+   ========================================================= */
+[hidden]{display:none!important}
+.side{top:calc(var(--top-h,64px) + 20px); max-height:calc(100vh - var(--top-h,64px) - 40px)}
+
+/* nav */
+.nav{display:flex; gap:4px; padding:0 22px 10px; overflow-x:auto; scrollbar-width:none; max-width:1480px; margin:0 auto}
+.nav::-webkit-scrollbar{display:none}
+.nav button{
+  flex:none; display:inline-flex; align-items:center; gap:7px; cursor:pointer; background:transparent;
+  border:1px solid transparent; color:var(--muted); border-radius:999px; padding:6px 14px; font-weight:600; font-size:13.5px;
+  transition:background .15s,color .15s,border-color .15s
+}
+.nav button svg{opacity:.8}
+.nav button:hover{color:var(--cream); background:var(--carbon-3)}
+.nav button[aria-current="page"]{background:var(--sauce-soft); color:var(--cream); border-color:rgba(213,34,43,.45)}
+.nav button:focus-visible,.subtabs button:focus-visible{outline:2px solid var(--patina-2); outline-offset:2px}
+.n-pill{font-family:var(--num); font-size:11px; font-weight:700; background:var(--gold-soft); color:var(--gold); border-radius:999px; padding:0 7px; line-height:18px; min-width:18px; text-align:center}
+body:not([data-mod="recipes"]) .shell, body:not([data-mod="recipes"]) .foot{display:none}
+
+.pend{
+  display:inline-flex; align-items:center; gap:6px; border-radius:999px; padding:6px 11px; font-size:12px; font-weight:700;
+  font-family:var(--num); white-space:nowrap; border:1px solid; cursor:help
+}
+.pend[data-s="local"]{color:var(--gold); background:var(--gold-soft); border-color:rgba(224,176,74,.35)}
+.pend[data-s="queued"],.pend[data-s="sending"]{color:var(--patina-2); background:var(--patina-soft); border-color:rgba(63,140,133,.45)}
+
+/* module shell */
+.mod{display:flex; flex-direction:column; gap:16px; max-width:1480px; margin:0 auto; padding:20px 22px 60px}
+.mod-head{display:flex; align-items:flex-end; gap:16px; flex-wrap:wrap; padding:4px 2px}
+.mod-head > div:first-child{flex:1 1 320px; min-width:0}
+.mod-head .eyebrow{font-family:var(--num); font-weight:700; font-size:11px; letter-spacing:.16em; color:var(--sauce-ink); direction:ltr; text-align:right}
+.mod-head h2{font-family:var(--disp); font-weight:400; font-size:clamp(24px,3vw,32px); line-height:1.2}
+.mod-head p{color:var(--muted); font-size:13px; max-width:70ch; margin-top:4px}
+.head-actions{display:flex; gap:10px; flex-wrap:wrap}
+.local-note{display:flex; gap:10px; align-items:flex-start; font-size:12.5px; border-radius:var(--r-md); padding:10px 14px; background:var(--gold-soft); color:var(--gold); border:1px solid rgba(224,176,74,.3)}
+.split{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:16px; align-items:start}
+.split.wide-left{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr)}
+@media (max-width:1050px){ .split,.split.wide-left{grid-template-columns:1fr} }
+.sec-h h3:only-child{margin-inline-end:auto}
+.sec-h .tools{display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-inline-start:auto}
+.inp.sm{padding:6px 11px; font-size:13px; border-radius:var(--r-sm); width:auto}
+select.inp.sm{padding-inline-end:30px; background-position:left 10px center}
+.num{font-family:var(--num); font-weight:700}
+
+/* forms */
+.fgrid{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px}
+.fgrid .span2{grid-column:1/-1}
+.inline-form{display:flex; gap:12px; align-items:flex-end; flex-wrap:wrap; margin-bottom:16px}
+.inline-form .f{flex:1 1 200px}
+.chk{display:flex; align-items:center; gap:9px; font-size:13px; color:var(--cream-2); margin:12px 0 2px; cursor:pointer}
+.chk input{width:18px; height:18px; accent-color:var(--sauce)}
+.seg{display:flex; flex-wrap:wrap; gap:6px}
+.seg button{cursor:pointer; border-radius:999px; border:1px solid var(--line-2); background:var(--carbon-3); color:var(--cream-2); padding:6px 13px; font-weight:600; font-size:13px; transition:all .15s}
+.seg button:hover{border-color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--sauce); border-color:var(--sauce-2); color:#FFF6EA}
+.seg button[data-tone="in"][aria-pressed="true"]{background:var(--go-soft); border-color:var(--go); color:var(--go)}
+.seg button[data-tone="count"][aria-pressed="true"]{background:var(--patina-soft); border-color:var(--patina); color:var(--patina-2)}
+.prev{margin-top:12px; font-size:13px; color:var(--muted); display:flex; gap:8px; align-items:center; flex-wrap:wrap}
+.prev b{font-family:var(--num); color:var(--cream)}
+.prev .arrow{color:var(--sauce-ink)}
+.prev.bad{color:var(--stop)}
+
+/* generic rows list */
+.rows{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px}
+.row-item{display:flex; align-items:center; gap:12px; padding:11px 14px; border-radius:var(--r-md); background:var(--carbon-3); border:1px solid var(--line); flex-wrap:wrap}
+.row-item .av{width:36px; height:36px; border-radius:50%; display:grid; place-items:center; flex:none; background:var(--sauce); color:var(--cream); font-family:var(--disp); font-size:18px}
+.row-item .info{flex:1 1 160px; min-width:0}
+.row-item .info b{display:block; font-weight:700; font-size:14.5px; overflow-wrap:anywhere}
+.row-item .info span{font-size:12px; color:var(--muted)}
+.row-item .acts{display:flex; gap:6px; margin-inline-start:auto}
+.row-item .inp{flex:1 1 160px}
+.rows.compact .row-item{padding:8px 12px; font-size:13px}
+.empty{padding:22px 14px; text-align:center; color:var(--muted); font-size:13px; border:1px dashed var(--line-2); border-radius:var(--r-md)}
+.pill{display:inline-flex; align-items:center; gap:5px; font-size:11.5px; font-weight:700; border-radius:999px; padding:1px 9px; border:1px solid var(--line-2); background:var(--carbon-4); color:var(--cream-2); white-space:nowrap}
+.pill.go{color:var(--go); background:var(--go-soft); border-color:rgba(103,185,138,.35)}
+.pill.warn{color:var(--gold); background:var(--gold-soft); border-color:rgba(224,176,74,.35)}
+.pill.bad{color:var(--stop); background:var(--stop-soft); border-color:rgba(224,88,76,.4)}
+.pill.teal{color:var(--patina-2); background:var(--patina-soft); border-color:rgba(63,140,133,.45)}
+.ico-btn{width:32px; height:32px; border-radius:8px; border:1px solid transparent; background:transparent; color:var(--muted); cursor:pointer; display:inline-grid; place-items:center; transition:background .15s,color .15s}
+.ico-btn:hover{background:var(--carbon-4); color:var(--cream)}
+.ico-btn.del:hover{background:var(--stop-soft); color:var(--stop)}
+.ico-btn:focus-visible{outline:2px solid var(--patina-2); outline-offset:1px}
+
+/* tables */
+.tbl-wrap{overflow-x:auto; border:1px solid var(--line); border-radius:var(--r-md); scrollbar-width:thin; scrollbar-color:var(--line-2) transparent}
+.tbl{width:100%; border-collapse:collapse; font-size:13px}
+.tbl th{text-align:right; font-weight:700; font-size:11.5px; color:var(--muted); background:var(--carbon-3); padding:9px 12px; border-bottom:1px solid var(--line); white-space:nowrap; position:sticky; top:0}
+.tbl td{padding:9px 12px; border-bottom:1px solid var(--line); vertical-align:middle}
+.tbl tr:last-child td{border-bottom:0}
+.tbl tbody tr:hover{background:rgba(255,255,255,.02)}
+.tbl .n{font-family:var(--num); font-weight:700; white-space:nowrap}
+.tbl .dim{color:var(--muted); font-size:12px; white-space:nowrap}
+.tbl .sub{display:block; font-size:11.5px; color:var(--muted); font-weight:400}
+.tbl td.c{text-align:center}
+.tbl tfoot td{background:var(--carbon-3); font-weight:700}
+
+/* KPIs */
+.kpis{display:flex; gap:10px; flex-wrap:wrap}
+.kpi{min-width:118px; flex:1 1 118px; padding:11px 15px; border-radius:var(--r-md); background:var(--carbon-2); border:1px solid var(--line)}
+.kpi .v{font-family:var(--disp); font-size:28px; line-height:1.1}
+.kpi .k{font-size:11.5px; color:var(--muted)}
+.kpi.hot .v{color:var(--sauce-ink)} .kpi.go .v{color:var(--go)} .kpi.gold .v{color:var(--gold)}
+
+/* sub tabs */
+.subtabs{display:flex; gap:6px; flex-wrap:wrap; border-bottom:1px solid var(--line); padding-bottom:10px}
+.subtabs button{cursor:pointer; background:transparent; border:0; color:var(--muted); font-weight:700; font-size:14px; padding:6px 10px; border-radius:var(--r-sm); display:inline-flex; align-items:center; gap:7px}
+.subtabs button:hover{color:var(--cream); background:var(--carbon-3)}
+.subtabs button[aria-selected="true"]{color:var(--cream); box-shadow:inset 0 -2px 0 var(--sauce)}
+
+/* yield calculator */
+.ycalc{margin-top:14px; padding:14px 16px; border-radius:var(--r-md); background:var(--carbon-3); border:1px solid var(--line); display:flex; gap:18px; align-items:center; flex-wrap:wrap}
+.ycalc .big{font-family:var(--disp); font-size:44px; line-height:.95; color:var(--go)}
+.ycalc .big.mid{color:var(--gold)} .ycalc .big.low{color:var(--sauce-ink)}
+.ycalc .big small{font-size:20px}
+.ycalc .lbl2{font-size:11.5px; color:var(--muted)}
+.ycalc .meter{flex:1 1 180px; display:flex; flex-direction:column; gap:6px}
+.ybar{height:10px; border-radius:6px; background:var(--stop-soft); overflow:hidden; display:flex; direction:rtl}
+.ybar i{display:block; height:100%; background:var(--go); border-radius:6px; transition:width .35s var(--ease)}
+.ycalc .legend{display:flex; gap:14px; flex-wrap:wrap; font-size:12px; color:var(--cream-2)}
+.ycalc .legend b{font-family:var(--num)}
+.ycalc .muted{color:var(--muted); font-size:13px}
+.ysum{display:flex; flex-direction:column; gap:8px; max-height:520px; overflow-y:auto; scrollbar-width:thin; scrollbar-color:var(--line-2) transparent}
+.ysum .it{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:4px 12px; padding:10px 12px; border-radius:var(--r-md); background:var(--carbon-3); border:1px solid var(--line)}
+.ysum .it b{font-weight:700; font-size:13.5px}
+.ysum .it .meta{grid-column:1/-1; font-size:11.5px; color:var(--muted); display:flex; gap:10px; flex-wrap:wrap}
+.ysum .it .pct{font-family:var(--disp); font-size:22px; line-height:1; align-self:center}
+
+/* inventory scan */
+.scan-row{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:8px 14px; padding:12px 14px; border-radius:var(--r-md); background:var(--carbon-3); border:1px solid var(--line); align-items:center}
+.scan-row .nm{font-weight:700; font-size:14px}
+.scan-row .meta{font-size:12px; color:var(--muted); display:flex; gap:8px; flex-wrap:wrap; margin-top:2px}
+.scan-row .acts{display:flex; gap:6px; flex-wrap:wrap; align-items:center; justify-content:flex-end}
+.scan-row .sim{grid-column:1/-1; font-size:12px; color:var(--gold); display:flex; gap:8px; align-items:center; flex-wrap:wrap}
+@media (max-width:680px){ .scan-row{grid-template-columns:1fr} .scan-row .acts{justify-content:flex-start} }
+.chips{display:flex; flex-wrap:wrap; gap:6px}
+.chip-x{display:inline-flex; align-items:center; gap:4px; padding:4px 6px 4px 11px; border-radius:999px; background:var(--carbon-4); border:1px solid var(--line-2); font-size:12.5px; font-weight:600}
+.chip-x button{width:22px; height:22px; border-radius:50%; border:0; background:transparent; color:var(--muted); cursor:pointer; display:grid; place-items:center}
+.chip-x button:hover{background:var(--stop-soft); color:var(--stop)}
+
+/* counter */
+.tickets{display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:10px}
+.tk{border-radius:var(--r-md); background:var(--carbon-3); border:1px solid var(--line); padding:12px 14px; display:flex; flex-direction:column; gap:8px; position:relative; overflow:hidden}
+.tk::before{content:''; position:absolute; inset-block:0; inset-inline-start:0; width:4px; background:var(--go)}
+.tk.mid::before{background:var(--gold)} .tk.late::before{background:var(--sauce)}
+.tk-top{display:flex; align-items:baseline; gap:8px}
+.tk-no{font-family:var(--disp); font-size:30px; line-height:1}
+.tk-no small{font-family:var(--body); font-size:11px; color:var(--muted)}
+.tk-time{margin-inline-start:auto; font-family:var(--num); font-weight:700; font-size:14px; color:var(--go)}
+.tk.mid .tk-time{color:var(--gold)} .tk.late .tk-time{color:var(--sauce-ink)}
+.tk ul{list-style:none; margin:0; padding:0; font-size:13px; color:var(--cream-2)}
+.tk ul li{display:flex; gap:6px}
+.tk ul li b{font-family:var(--num); color:var(--cream); min-width:22px}
+.tk .note{margin:0; padding:6px 9px; font-size:12px}
+.tk-acts{display:flex; gap:6px; margin-top:auto}
+.tk-acts .btn{flex:1; padding:8px 10px}
+.btn.go{background:var(--go-soft); border-color:var(--go); color:var(--go)}
+.btn.go:hover{background:#18301f}
+.qty-row{display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:var(--r-md); background:var(--carbon-3); border:1px solid var(--line)}
+.qty-row .t{flex:1; min-width:0; font-weight:600; font-size:13.5px}
+.qty-row .t span{display:block; font-size:11.5px; color:var(--muted); font-weight:400}
+.qty-row.on{border-color:rgba(213,34,43,.5); background:var(--sauce-soft)}
+.stepper{display:flex; align-items:center; gap:4px; direction:ltr}
+.stepper button{width:34px; height:34px; border-radius:9px; border:1px solid var(--line-2); background:var(--carbon-2); color:var(--cream); cursor:pointer; font-size:18px; line-height:1}
+.stepper button:hover{border-color:var(--muted)}
+.stepper output{min-width:28px; text-align:center; font-family:var(--disp); font-size:20px}
+.menu-list{display:flex; flex-direction:column; gap:6px; max-height:44vh; overflow-y:auto; scrollbar-width:thin; scrollbar-color:var(--line-2) transparent; padding:2px}
+details.rep{border-radius:var(--r-md); background:var(--carbon-3); border:1px solid var(--line)}
+details.rep + details.rep{margin-top:8px}
+details.rep summary{list-style:none; cursor:pointer; padding:11px 14px; display:grid; grid-template-columns:minmax(150px,1.3fr) repeat(5,minmax(60px,1fr)) auto; gap:8px; align-items:center; font-size:13px}
+details.rep summary::-webkit-details-marker{display:none}
+details.rep summary .d b{display:block; font-weight:700}
+details.rep summary .d span{font-size:11.5px; color:var(--muted)}
+details.rep summary .c{text-align:center}
+details.rep summary .c b{display:block; font-family:var(--disp); font-size:20px; line-height:1.1}
+details.rep summary .c span{font-size:10.5px; color:var(--muted)}
+details.rep .body{padding:4px 14px 14px; border-top:1px solid var(--line)}
+@media (max-width:780px){
+  details.rep summary{grid-template-columns:repeat(3,minmax(0,1fr))}
+  details.rep summary .d{grid-column:1/-1}
+  details.rep summary .st{grid-column:1/-1}
+}
+
+/* modal */
+.ovl{position:fixed; inset:0; z-index:90; background:rgba(5,4,3,.72); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); display:grid; place-items:center; padding:16px; animation:tin .2s var(--ease)}
+.modal{width:min(560px,100%); max-height:calc(100vh - 32px); display:flex; flex-direction:column; background:var(--carbon-2); border:1px solid var(--line-2); border-radius:var(--r-lg); box-shadow:0 30px 80px -30px #000}
+.modal-h{display:flex; align-items:center; gap:10px; padding:16px 18px; border-bottom:1px solid var(--line)}
+.modal-h h3{font-family:var(--disp); font-weight:400; font-size:20px; flex:1}
+.modal-b{padding:16px 18px; overflow-y:auto; display:flex; flex-direction:column; gap:12px}
+.modal-b p{color:var(--cream-2); font-size:13.5px}
+.modal-f{display:flex; gap:10px; justify-content:flex-start; padding:14px 18px; border-top:1px solid var(--line); flex-wrap:wrap}
+.modal-f:empty{display:none}
+.btn.danger{background:var(--stop-soft); border-color:var(--stop); color:var(--stop)}
+.btn.danger:hover{background:#3a1714}
+
+/* instructions preview + full recipe card */
+.lbl-row{display:flex; align-items:center; gap:6px; margin-bottom:6px; flex-wrap:wrap}
+.lbl-row .lbl{margin:0; margin-inline-end:auto}
+.instr-view{
+  display:block; width:100%; text-align:right; cursor:zoom-in; position:relative; max-height:230px; overflow:hidden;
+  background:var(--carbon-3); border:1px solid var(--line-2); border-radius:var(--r-md); padding:12px 14px 34px; color:var(--cream);
+  transition:border-color .15s, background .15s
+}
+.instr-view:hover{border-color:var(--patina); background:var(--carbon-4)}
+.instr-view:focus-visible{outline:2px solid var(--patina-2); outline-offset:2px}
+.instr-view ol{margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:6px}
+.instr-view li{display:flex; gap:9px; line-height:1.75; font-size:14px}
+.instr-view li .k{flex:none; width:22px; height:22px; margin-top:2px; border-radius:50%; background:var(--sauce-soft); color:var(--sauce-ink); font-family:var(--num); font-weight:700; font-size:12px; display:grid; place-items:center}
+.instr-view li.note .k{background:var(--gold-soft); color:var(--gold)}
+.instr-view .fade{position:absolute; inset-inline:0; bottom:0; height:64px; background:linear-gradient(180deg,rgba(29,23,21,0),var(--carbon-3) 70%); display:flex; align-items:flex-end; justify-content:center; padding-bottom:8px; font-size:12px; font-weight:600; color:var(--patina-2); pointer-events:none}
+.instr-view:hover .fade{background:linear-gradient(180deg,rgba(37,30,26,0),var(--carbon-4) 70%)}
+
+.rc-ovl{position:fixed; inset:0; z-index:95; background:rgba(5,4,3,.85); display:grid; place-items:center; padding:clamp(8px,2vw,24px); animation:tin .2s var(--ease)}
+.rc{
+  --fs:18px; width:min(1180px,100%); height:calc(100vh - 2*clamp(8px,2vw,24px)); height:calc(100dvh - 2*clamp(8px,2vw,24px));
+  display:flex; flex-direction:column; background:var(--cream); color:#1C1412; border-radius:18px; overflow:hidden;
+  box-shadow:0 40px 100px -30px #000
+}
+.rc-h{display:flex; align-items:center; gap:14px; padding:14px 20px; background:#1C1412; color:var(--cream); flex:none}
+.rc-h .t{flex:1; min-width:0}
+.rc-h .t small{display:block; font-family:var(--num); font-size:10.5px; letter-spacing:.14em; color:var(--sauce-ink); direction:ltr; text-align:right}
+.rc-h h2{font-family:var(--disp); font-weight:400; font-size:clamp(20px,2.6vw,30px); line-height:1.2; overflow-wrap:anywhere}
+.rc-h .meta{display:flex; gap:8px; flex-wrap:wrap}
+.rc-h .meta span{font-size:12px; border:1px solid rgba(253,240,215,.25); border-radius:999px; padding:2px 10px}
+.rc-h .icon-btn{flex:none}
+.rc-b{flex:1; min-height:0; overflow:hidden; padding:calc(var(--fs)*1) calc(var(--fs)*1.2); font-size:var(--fs); display:grid; grid-template-columns:minmax(0,.9fr) minmax(0,2.1fr); gap:calc(var(--fs)*1.2)}
+.rc-b.no-ing{grid-template-columns:1fr}
+.rc-b.scroll{overflow:auto}
+.rc-ing h4,.rc-steps h4{font-family:var(--disp); font-weight:400; font-size:1.15em; color:#8E1A14; margin-bottom:.45em}
+.rc-ing ul{list-style:none; margin:0; padding:0}
+.rc-ing li{display:flex; gap:.5em; align-items:baseline; padding:.22em 0; border-bottom:1px dashed rgba(28,20,18,.18); line-height:1.4}
+.rc-ing li .q{font-family:var(--num); font-weight:700; white-space:nowrap; color:#8E1A14}
+.rc-ing li .p{color:#6b5a50; font-size:.82em}
+.rc-steps{min-width:0}
+.rc-steps ol{list-style:none; margin:0; padding:0; column-width:22em; column-gap:1.6em; column-fill:auto}
+.rc-steps li{display:flex; gap:.6em; break-inside:avoid; margin-bottom:.55em; line-height:1.6}
+.rc-steps li .k{flex:none; width:1.65em; height:1.65em; border-radius:50%; background:#D5222B; color:#FFF6EA; font-family:var(--num); font-weight:700; font-size:.82em; display:grid; place-items:center; margin-top:.2em}
+.rc-steps li.note{background:#F6E2B8; border-radius:.5em; padding:.35em .6em}
+.rc-steps li.note .k{background:#B07A12}
+.rc-empty{color:#6b5a50; font-style:italic}
+@media (max-width:720px){
+  .rc-b{grid-template-columns:1fr; align-content:start}
+  .rc-steps ol{column-width:auto; columns:1}
+}
+@media print{ body > *:not(.rc-ovl){display:none!important} .rc-ovl{position:static; background:none; padding:0} .rc{height:auto; box-shadow:none} }
+
+/* mobile tweaks for modules */
+@media (max-width:920px){
+  .nav{padding:0 12px 8px}
+  .mod{padding:12px 12px calc(40px + env(safe-area-inset-bottom)); gap:12px}
+  .mod .sec{border-radius:14px}
+  .fgrid{grid-template-columns:1fr 1fr}
+  .kpi{padding:9px 12px; min-width:0; flex:1 1 30%}
+  .kpi .v{font-size:23px}
+  .tickets{grid-template-columns:1fr 1fr}
+  .tbl{font-size:12.5px}
+  .pend{padding:0 10px; height:38px}
+  .row-item .acts .btn{min-height:40px}
+}
+@media (max-width:480px){ .tickets{grid-template-columns:1fr} .fgrid{grid-template-columns:1fr} .fgrid .span2{grid-column:auto} }
 </style>
 <!-- تنظیمات PWA و آیکون -->
 <link rel="manifest" href="manifest.json">
@@ -468,8 +730,19 @@ textarea.inp{resize:vertical; min-height:150px; line-height:1.9}
       <button class="icon-btn" id="reloadBtn" type="button" title="دریافت دوباره از شیت" aria-label="دریافت دوباره از شیت">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg>
       </button>
+      <span class="pend" id="pendChip" hidden></span>
+      <button class="icon-btn" id="exportBtn" type="button" title="خروجی JSON کامل از همهٔ اطلاعات" aria-label="خروجی JSON کامل">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11"/><path d="M7 10l5 5 5-5"/><path d="M5 20h14"/></svg>
+      </button>
     </div>
   </div>
+  <nav class="nav" id="modNav" aria-label="بخش‌های برنامه">
+    <button type="button" data-mod="recipes"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M9 9h6M9 13h6"/></svg>رسپی‌ها</button>
+    <button type="button" data-mod="counter"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg>کانتر <span class="n-pill" id="navOpen" hidden></span></button>
+    <button type="button" data-mod="inv"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8l9-5 9 5v8l-9 5-9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg>انبار <span class="n-pill" id="navLow" hidden></span></button>
+    <button type="button" data-mod="waste"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"/><path d="M6 20V10M12 20V4M18 20v-7"/></svg>دورریز و بازده</button>
+    <button type="button" data-mod="team"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6.5 6.5 0 0 1 3.5 6"/></svg>تیم</button>
+  </nav>
 </header>
 
 <main class="shell">
@@ -497,7 +770,204 @@ textarea.inp{resize:vertical; min-height:150px; line-height:1.9}
   <!-- Workspace (left in RTL) -->
   <section class="work" id="work" aria-label="ویرایشگر رسپی"></section>
 </main>
+
+<!-- ================= COUNTER ================= -->
+<main class="mod" id="mod-counter" hidden aria-label="کانتر فیش‌ها">
+  <div class="mod-head">
+    <div>
+      <div class="eyebrow">PASS · COUNTER</div>
+      <h2>کانتر فیش‌ها</h2>
+      <p id="ctrDay"></p>
+    </div>
+    <div class="head-actions">
+      <button class="btn red" type="button" id="ctrNew">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        فیش جدید
+      </button>
+    </div>
+  </div>
+  <div class="local-note" data-local-note hidden></div>
+  <div class="kpis" id="ctrKpis"></div>
+  <div class="split wide-left">
+    <div class="panel sec">
+      <div class="sec-h"><h3>فیش‌های باز</h3><span class="hint" id="ctrOpenHint"></span></div>
+      <div class="tickets" id="ctrBoard"></div>
+    </div>
+    <div class="panel sec">
+      <div class="sec-h"><h3>اقلام امروز</h3></div>
+      <div id="ctrItems"></div>
+      <div class="sec-h" style="margin-top:18px"><h3>تحویل‌شده / لغوشدهٔ امروز</h3></div>
+      <ul class="rows compact" id="ctrDone"></ul>
+    </div>
+  </div>
+  <div class="panel sec">
+    <div class="sec-h">
+      <h3>گزارش روزانه</h3>
+      <div class="tools">
+        <label class="hint" for="ctrDayStart" style="margin:0">شروع روز کاری</label>
+        <select class="inp sm" id="ctrDayStart"></select>
+        <button class="btn sm teal" type="button" id="ctrClose">بستن روز و ثبت گزارش</button>
+      </div>
+    </div>
+    <div id="ctrReports"></div>
+  </div>
+</main>
+
+<!-- ================= INVENTORY ================= -->
+<main class="mod" id="mod-inv" hidden aria-label="انبار و مواد اولیه">
+  <div class="mod-head">
+    <div>
+      <div class="eyebrow">STOCK · INVENTORY</div>
+      <h2>انبار و مواد اولیه</h2>
+      <p>کالاها را از دل رسپی‌ها پیدا و ثبت کن، ورود و مصرف هر بخش را بنویس تا موجودی همیشه معلوم باشد.</p>
+    </div>
+  </div>
+  <div class="local-note" data-local-note hidden></div>
+  <div class="kpis" id="invKpis"></div>
+  <div class="subtabs" id="invTabs" role="tablist">
+    <button type="button" role="tab" data-t="items">کالاها</button>
+    <button type="button" role="tab" data-t="moves">ثبت ورود / مصرف</button>
+    <button type="button" role="tab" data-t="sections">مصرف بخش‌ها</button>
+    <button type="button" role="tab" data-t="scan">یافتن از رسپی‌ها <span class="n-pill" id="scanCount" hidden></span></button>
+  </div>
+
+  <section class="panel sec" data-tp="items">
+    <div class="sec-h">
+      <h3>کالاهای انبار</h3>
+      <div class="tools">
+        <input class="inp sm" id="invSearch" type="search" placeholder="جستجوی کالا…" autocomplete="off" aria-label="جستجوی کالا">
+        <button class="btn sm red" type="button" id="invAdd">+ کالای جدید</button>
+      </div>
+    </div>
+    <div id="invItems"></div>
+  </section>
+
+  <section class="panel sec" data-tp="moves" hidden>
+    <div class="split">
+      <form id="moveForm" autocomplete="off" novalidate>
+        <div class="sec-h"><h3>ثبت تراکنش</h3></div>
+        <div class="fgrid">
+          <div class="span2"><label class="lbl" for="mItem">کالا <span class="req">*</span></label><select class="inp" id="mItem"></select></div>
+          <div class="span2"><span class="lbl">نوع</span><div class="seg" id="mType" role="group" aria-label="نوع تراکنش"></div></div>
+          <div><label class="lbl" for="mQty" id="mQtyLbl">مقدار <span class="req">*</span></label><input class="inp num" id="mQty" inputmode="decimal" placeholder="۰"></div>
+          <div><label class="lbl" for="mUnit">واحد</label><input class="inp" id="mUnit" list="unitList"></div>
+          <div id="mSecWrap"><label class="lbl" for="mSec">بخش مصرف‌کننده</label><select class="inp" id="mSec"></select></div>
+          <div><label class="lbl" for="mDate">زمان</label><input class="inp" id="mDate" type="datetime-local"></div>
+          <div class="span2"><label class="lbl" for="mNote">یادداشت</label><input class="inp" id="mNote" placeholder="مثلاً: فاکتور خرید، تولید سس…"></div>
+        </div>
+        <div class="prev" id="mPrev"></div>
+        <button class="btn red block" type="submit" style="margin-top:12px">ثبت تراکنش</button>
+      </form>
+      <div>
+        <div class="sec-h"><h3>آخرین تراکنش‌ها</h3></div>
+        <ul class="rows compact" id="moveList"></ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel sec" data-tp="sections" hidden>
+    <div class="sec-h">
+      <h3>مصرف هر بخش</h3>
+      <div class="tools">
+        <select class="inp sm" id="secRange" aria-label="بازهٔ زمانی">
+          <option value="today">امروز</option><option value="yesterday">دیروز</option><option value="7">۷ روز اخیر</option><option value="30">۳۰ روز اخیر</option><option value="all">همه</option>
+        </select>
+      </div>
+    </div>
+    <div id="secReport"></div>
+    <div class="sec-h" style="margin-top:20px"><h3>بخش‌های آشپزخانه</h3></div>
+    <div class="chips" id="secChips"></div>
+    <form class="inline-form" id="secForm" style="margin:12px 0 0">
+      <div class="f"><input class="inp" id="secNew" placeholder="نام بخش جدید…" aria-label="نام بخش جدید"></div>
+      <button class="btn teal" type="submit">افزودن بخش</button>
+    </form>
+  </section>
+
+  <section class="panel sec" data-tp="scan" hidden>
+    <div class="sec-h">
+      <h3>مواد اولیهٔ ثبت‌نشده در رسپی‌ها</h3>
+      <div class="tools"><button class="btn sm red" type="button" id="scanAll">ثبت همهٔ موارد بدون شباهت</button></div>
+    </div>
+    <p class="hint" style="margin:-6px 0 14px; color:var(--muted); font-size:12.5px">همهٔ ردیف‌های مواد اولیهٔ رسپی‌ها بررسی می‌شود. نام‌هایی که هنوز کالا نیستند اینجا می‌آیند؛ اگر شبیه کالای موجود باشند (مثلاً «سس خیارشو» و «سس خیارشور») پیشنهاد ادغام داده می‌شود.</p>
+    <div class="rows" id="scanList"></div>
+  </section>
+</main>
+
+<!-- ================= WASTE / YIELD ================= -->
+<main class="mod" id="mod-waste" hidden aria-label="لاگ دورریز و بازده">
+  <div class="mod-head">
+    <div>
+      <div class="eyebrow">YIELD TEST · WASTE LOG</div>
+      <h2>لاگ دورریز و بازده</h2>
+      <p>مقدار ماده را قبل و بعد از فرایند (پاک‌کردن، پخت، سرخ‌کردن…) وارد کن؛ بازده و دورریز خودکار حساب می‌شود و میانگین هر ماده برای برنامه‌ریزی خرید نگه داشته می‌شود.</p>
+    </div>
+  </div>
+  <div class="local-note" data-local-note hidden></div>
+  <div class="split">
+    <form class="panel sec" id="wasteForm" autocomplete="off" novalidate>
+      <div class="sec-h"><h3>ثبت تست بازده</h3></div>
+      <div class="fgrid">
+        <div class="span2"><label class="lbl" for="wItem">ماده غذایی <span class="req">*</span></label><input class="inp" id="wItem" list="itemNameList" placeholder="مثلاً: پیاز زرد"></div>
+        <div><label class="lbl" for="wProc">فرایند</label><select class="inp" id="wProc"></select></div>
+        <div><label class="lbl" for="wUnit">واحد</label><input class="inp" id="wUnit" list="unitList" value="گرم"></div>
+        <div><label class="lbl" for="wGross">مقدار قبل از فرایند <span class="req">*</span></label><input class="inp num" id="wGross" inputmode="decimal" placeholder="۰"></div>
+        <div><label class="lbl" for="wNet">مقدار بعد از فرایند <span class="req">*</span></label><input class="inp num" id="wNet" inputmode="decimal" placeholder="۰"></div>
+        <div class="span2"><label class="lbl" for="wReason">نوع دورریز / علت</label><input class="inp" id="wReason" list="reasonList" placeholder="پوست، ریشه، تبخیر آب، چربی…"></div>
+        <div class="span2"><label class="lbl" for="wNote">یادداشت</label><input class="inp" id="wNote" placeholder="اختیاری — مثلاً دمای پخت یا مدت زمان"></div>
+      </div>
+      <div class="ycalc" id="wCalc"></div>
+      <label class="chk" id="wStockWrap" hidden><input type="checkbox" id="wStock"> <span>مقدار دورریز را از موجودی انبار هم کم کن</span></label>
+      <button class="btn red block" type="submit" style="margin-top:12px">ثبت در لاگ</button>
+    </form>
+    <div class="panel sec">
+      <div class="sec-h"><h3>میانگین بازده هر ماده</h3><span class="hint">بر اساس همهٔ تست‌ها</span></div>
+      <div class="ysum" id="wSummary"></div>
+    </div>
+  </div>
+  <div class="panel sec">
+    <div class="sec-h">
+      <h3>تاریخچهٔ لاگ</h3>
+      <div class="tools"><input class="inp sm" id="wFilter" type="search" placeholder="فیلتر ماده یا فرایند…" aria-label="فیلتر لاگ"></div>
+    </div>
+    <div id="wTable"></div>
+  </div>
+</main>
+
+<!-- ================= TEAM ================= -->
+<main class="mod" id="mod-team" hidden aria-label="مدیریت تیم">
+  <div class="mod-head">
+    <div>
+      <div class="eyebrow">TEAM · BRIGADE</div>
+      <h2>تیم آشپزخانه</h2>
+      <p>سرآشپزها را اضافه، ویرایش یا حذف کن. همین فهرست در منوی «سرآشپز فعال» بالای صفحه نشان داده می‌شود. حذف یک نفر، رسپی‌ها و بازخوردهای قبلی‌اش را پاک نمی‌کند.</p>
+    </div>
+  </div>
+  <div class="local-note" data-local-note hidden></div>
+  <div class="panel sec">
+    <form class="inline-form" id="teamForm" autocomplete="off" novalidate>
+      <div class="f"><label class="lbl" for="tmName">نام <span class="req">*</span></label><input class="inp" id="tmName" placeholder="مثلاً: AmirReza"></div>
+      <div class="f"><label class="lbl" for="tmStation">ایستگاه / نقش</label><input class="inp" id="tmStation" list="stationList" placeholder="گریل، سرد، سس، سوشف…"></div>
+      <button class="btn red" type="submit">افزودن سرآشپز</button>
+    </form>
+    <ul class="rows" id="teamList"></ul>
+  </div>
+</main>
+
 <div class="foot">THE SAUSAGE IS THE BOSS.</div>
+
+<div class="ovl" id="ovl" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="ovlTitle">
+    <div class="modal-h">
+      <h3 id="ovlTitle"></h3>
+      <button class="icon-btn" type="button" data-close aria-label="بستن">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="modal-b" id="ovlBody"></div>
+    <div class="modal-f" id="ovlFoot"></div>
+  </div>
+</div>
+<div class="rc-ovl" id="rcOvl" hidden><article class="rc" id="rcCard" role="dialog" aria-modal="true" aria-label="کارت کامل رسپی"></article></div>
 
 <div class="toasts" id="toasts" aria-live="assertive"></div>
 
@@ -551,7 +1021,15 @@ textarea.inp{resize:vertical; min-height:150px; line-height:1.9}
       </div>
     </div>
     <div style="margin-top:12px">
-      <label class="lbl" for="fInstr">دستور پخت</label>
+      <div class="lbl-row">
+        <label class="lbl" for="fInstr">دستور پخت</label>
+        <button class="btn ghost sm" type="button" data-act="instrToggle">ویرایش متن</button>
+        <button class="btn ghost sm" type="button" data-act="cardOpen">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+          کارت کامل
+        </button>
+      </div>
+      <div class="instr-view" role="button" tabindex="0" data-f="instrView" aria-label="نمایش کارت کامل رسپی"></div>
       <textarea class="inp" id="fInstr" data-r="instructions" placeholder="مراحل را خط به خط بنویس — دما، زمان، ترتیب سرو…"></textarea>
     </div>
     <div class="note" data-f="warn" hidden></div>
@@ -603,6 +1081,7 @@ textarea.inp{resize:vertical; min-height:150px; line-height:1.9}
   </div>
 </template>
 
+<script type="application/json" id="seedSnapshot">{"snapshot_at":"2026-10-03T12:30:00.000Z","note":"آخرین دادهٔ ثبت‌شده توسط آشپزها در گوگل شیت؛ اگر شیت در دسترس نباشد همین نمایش داده می‌شود.","data":{"team":[{"chef_name":"AmirReza","station":""},{"chef_name":"Pedrum","station":""},{"chef_name":"AmirParsa","station":""}],"recipes":[{"recipe_id":"REC-1790452167646","title":"Hot Dog","category":"ساندویچ","yield_amount":1,"instructions":"1: نان هات داگ از وسط برش میخورد.\n2: سس خیارشور  به کف نان میخورد (2 خط سس به دو طرف نان)\n3: سوسیس ارمنی سرخ شده ۵الی ۷ دقیقه با یک خط وسط\n4: سس خردل در نهایت اضافه میشود.\nنکته: در صورت نیاز ساندویچ قبل از سرو گرم شود.","last_modified_by":"AmirReza","updated_at":"2026-09-27T21:33:00.000Z"},{"recipe_id":"REC-1790517896432","title":"امریکن هات داگ","category":"ساندویچ","yield_amount":1,"instructions":"1: نان هات داگ از وسط برش میخورد.\n2: سس خیارشور  به کف نان میخورد (2 خط سس به دو طرف نان)\n3: سوسیس روسو سرخ شده ۵الی ۷ دقیقه با یک خط وسط\n4: سس خردل در نهایت اضافه میشود.\nنکته: در صورت نیاز ساندویچ قبل از سرو گرم شود.","last_modified_by":"AmirReza","updated_at":"2026-09-27T21:36:00.000Z"},{"recipe_id":"REC-1790529928168","title":"سس خیار شور","category":"سس و مرینیت","yield_amount":"یک بنماری سایز۱/۳","instructions":"همه مواد داخل کاسه با هم دیگه میکس میشه و نیازی به بلندر نیست","last_modified_by":"AmirParsa","updated_at":"2026-10-01T15:55:00.000Z"},{"recipe_id":"REC-1790530099929","title":"سس بیس","category":"سس و مرینیت","yield_amount":"","instructions":"همه مواد باهم دیگه در بلندر میکس شود","last_modified_by":"AmirReza","updated_at":"2026-10-01T19:23:00.000Z"},{"recipe_id":"REC-1790530170363","title":"سس هات هانی","category":"سس و مرینیت","yield_amount":"","instructions":"هویج پخته شود،به همراه فلفل تازه،سیر و نمک،کاملا بلند شود \nشکر را در آب و سرکه روی حرارت ملایم حل میکنیم تا کمی جوش بیاد \nسپس هویج و فلفل و سیر میکس شده بهش اضافه شود و هم میزنیم تا کامل ترکیب بشه \nروی حرارت ملایم،کم کم نشاسته حل شده در اب رو بهش اضافه میکنیم \nبعد از ۵ دقیقه قل ریز سس امادس","last_modified_by":"AmirParsa","updated_at":"2026-09-29T09:40:00.000Z"},{"recipe_id":"REC-1790530284299","title":"سس سبزیجات","category":"سس و مرینیت","yield_amount":"","instructions":"خیار شور رنده شده،سبزیجات کاملا خورد شده \nدر ظرف باهم میکس شوند \nنیازی به میکس کردن در بلندر نیست","last_modified_by":"AmirParsa","updated_at":"2026-09-29T09:47:00.000Z"},{"recipe_id":"REC-1790530590885","title":"پیکل پیاز","category":"سس و مرینیت","yield_amount":"","instructions":"","last_modified_by":"AmirParsa","updated_at":"2026-09-27T17:37:00.000Z"},{"recipe_id":"REC-1790530969977","title":"مرینیت شنیسل مرغ","category":"سس و مرینیت","yield_amount":"","instructions":"کلیه مواد با شنیسل به ارامی و به مدت ۵ دقیقه ماساژ میدهیم تا کاملا مرینیت بشه،سپس ۶ ساعت در یخچال استراحت کنه","last_modified_by":"AmirParsa","updated_at":"2026-10-01T12:29:00.000Z"},{"recipe_id":"REC-1790531143343","title":"پوره سیب زمینی","category":"","yield_amount":"","instructions":"","last_modified_by":"AmirParsa","updated_at":"2026-09-27T17:49:00.000Z"},{"recipe_id":"REC-1790531397716","title":"سس مایونز چیلی","category":"سس و مرینیت","yield_amount":"","instructions":"دلمه ی قرمز روی حرارت کاملا کبابی شود،سپس پوست گیری و با بقیه مواد اولیه بلند شود","last_modified_by":"AmirParsa","updated_at":"2026-09-29T10:02:00.000Z"},{"recipe_id":"REC-1790531584167","title":"سس خردل دست ساز","category":"","yield_amount":"","instructions":"","last_modified_by":"AmirParsa","updated_at":"2026-09-27T17:53:00.000Z"},{"recipe_id":"REC-1790533253677","title":"گرین مش","category":"سس و مرینیت","yield_amount":"","instructions":"سیب زمینی تنوری شود \nاسفناج تف خورده با کمی سیر و پیاز  کاملا ساطوری شده \nکلیه مواد با هم در کاسه ترکیب میشه","last_modified_by":"AmirParsa","updated_at":"2026-09-29T10:10:00.000Z"},{"recipe_id":"REC-1790533391513","title":"پیاز کاراملی","category":"سس و مرینیت","yield_amount":"۲۵ پرس","instructions":"۱۳۰۰ گرم پیاز خام برش خورده،روی حرارت ملایم ۳گرم نمک،تا کاراملی شود ،در نهایت کره اضافه میشه \nمیزان نهایی در بالاترین کیفیت ۵۰۰ گرم ","last_modified_by":"AmirParsa","updated_at":"2026-09-27T20:18:00.000Z"},{"recipe_id":"REC-1790533500710","title":"آرد سوخاری","category":"","yield_amount":"","instructions":"","last_modified_by":"AmirParsa","updated_at":"2026-09-27T18:27:00.000Z"}],"ingredients":[{"recipe_id":"REC-1790533391513","ingredient_name":"پیاز زرد","quantity":1300,"unit":"گرم","prep_cut":"ژولین"},{"recipe_id":"REC-1790533391513","ingredient_name":"نمک","quantity":5,"unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790533391513","ingredient_name":"کره","quantity":20,"unit":"گره","prep_cut":"دمای محیط"},{"recipe_id":"REC-1790452167646","ingredient_name":"نان هات داگ","quantity":1,"unit":"عدد","prep_cut":""},{"recipe_id":"REC-1790452167646","ingredient_name":"سوسیس ارمنی","quantity":1,"unit":"عدد","prep_cut":""},{"recipe_id":"REC-1790452167646","ingredient_name":"سس خیارشور","quantity":40,"unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790452167646","ingredient_name":"خردل","quantity":15,"unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790517896432","ingredient_name":"نان هات داگ","quantity":"۱","unit":"عدد","prep_cut":""},{"recipe_id":"REC-1790517896432","ingredient_name":"هات داگ روسو","quantity":"۱","unit":"عدد","prep_cut":""},{"recipe_id":"REC-1790517896432","ingredient_name":"سس خیارشو","quantity":"۴۰","unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790517896432","ingredient_name":"سس خردل","quantity":"۱۵","unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790517896432","ingredient_name":"طرف سالن","quantity":"۱","unit":"عدد","prep_cut":""},{"recipe_id":"REC-1790517896432","ingredient_name":"کاغز","quantity":"۱","unit":"عدد","prep_cut":""},{"recipe_id":"REC-1790530170363","ingredient_name":"هویج","quantity":1300,"unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790530170363","ingredient_name":"فلفل قرمز تند تازه","quantity":50,"unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790530170363","ingredient_name":"سرکه","quantity":400,"unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790530170363","ingredient_name":"آب","quantity":800,"unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790530170363","ingredient_name":"شکر","quantity":400,"unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790530170363","ingredient_name":"نشاسته ذرت","quantity":20,"unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790530170363","ingredient_name":"آب سرد برای حل کردن نشاسته","quantity":150,"unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790530170363","ingredient_name":"نمک","quantity":10,"unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790530170363","ingredient_name":"سیر تازه","quantity":45,"unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790530284299","ingredient_name":"مایونز","quantity":1000,"unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790530284299","ingredient_name":"خیار شور","quantity":150,"unit":"گرم","prep_cut":"رنده شده،ابگرفته"},{"recipe_id":"REC-1790530284299","ingredient_name":"جعفری","quantity":50,"unit":"گرم","prep_cut":"خورد شده"},{"recipe_id":"REC-1790530284299","ingredient_name":"پیازچه","quantity":50,"unit":"گرم","prep_cut":"خورد شده"},{"recipe_id":"REC-1790530284299","ingredient_name":"سیر","quantity":25,"unit":"گرم","prep_cut":"رنده شده ریز"},{"recipe_id":"REC-1790530284299","ingredient_name":"ابلیمو","quantity":10,"unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790530284299","ingredient_name":"فلفل سیاه","quantity":5,"unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790530284299","ingredient_name":"نمک","quantity":10,"unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790530284299","ingredient_name":"شکر","quantity":10,"unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790531397716","ingredient_name":"مایونز","quantity":1000,"unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790531397716","ingredient_name":"فلفل دلمه قرمز کبابی","quantity":200,"unit":"گرم","prep_cut":"کاملا روی شعله کبابی شود"},{"recipe_id":"REC-1790531397716","ingredient_name":"فلفل قرمز تند تازه","quantity":45,"unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790531397716","ingredient_name":"سیر تازه","quantity":15,"unit":"گرم","prep_cut":"رنده شده"},{"recipe_id":"REC-1790531397716","ingredient_name":"سرکه سفید","quantity":35,"unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790531397716","ingredient_name":"آبلیمو","quantity":20,"unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790531397716","ingredient_name":"شکر","quantity":20,"unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790531397716","ingredient_name":"نمک","quantity":10,"unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790531397716","ingredient_name":"پاپریکا دودی","quantity":5,"unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790531397716","ingredient_name":"فلفل سیاه","quantity":3,"unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790531397716","ingredient_name":"روغن مایع","quantity":30,"unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790533253677","ingredient_name":"سیب زمینی تنوری","quantity":1000,"unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790533253677","ingredient_name":"اسفناج تف خورده","quantity":250,"unit":"گرم","prep_cut":"آبگرفته ،ساطوری"},{"recipe_id":"REC-1790533253677","ingredient_name":"پیاز کاراملی","quantity":100,"unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790533253677","ingredient_name":"کره","quantity":100,"unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790533253677","ingredient_name":"سس سبزیجات","quantity":200,"unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790533253677","ingredient_name":"فلفل سیاه","quantity":3,"unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790533253677","ingredient_name":"نمک","quantity":5,"unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790533253677","ingredient_name":"پاپریکا","quantity":1,"unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790533253677","ingredient_name":"سیر تازه","quantity":5,"unit":"گرم","prep_cut":"۱ حبه"},{"recipe_id":"REC-1790533253677","ingredient_name":"پیاز","quantity":50,"unit":"گرم","prep_cut":"نگینی خورد شده"},{"recipe_id":"REC-1790530969977","ingredient_name":"شنیسل مرغ","quantity":1000,"unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790530969977","ingredient_name":"خردل","quantity":30,"unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790530969977","ingredient_name":"آبلیمو","quantity":15,"unit":"گرم","prep_cut":"لیمو تازه ابگرفته"},{"recipe_id":"REC-1790530969977","ingredient_name":"سیر تازه","quantity":8,"unit":"گرم","prep_cut":"رنده شده"},{"recipe_id":"REC-1790530969977","ingredient_name":"نمک","quantity":8,"unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790530969977","ingredient_name":"شکر","quantity":5,"unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790530969977","ingredient_name":"پاپریکا دودی","quantity":7,"unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790530969977","ingredient_name":"فلفل سیاه","quantity":2,"unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790530969977","ingredient_name":"پودر سیر","quantity":1,"unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790530969977","ingredient_name":"آب","quantity":60,"unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790530969977","ingredient_name":"روغن","quantity":30,"unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790530969977","ingredient_name":"عصاره مرغ","quantity":"0,5","unit":"عدد","prep_cut":"نصف یک عدد گالینا مرغ"},{"recipe_id":"REC-1790529928168","ingredient_name":"مایونز","quantity":1,"unit":"کیلوگرم","prep_cut":""},{"recipe_id":"REC-1790529928168","ingredient_name":"کچاپ","quantity":500,"unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790529928168","ingredient_name":"جعفری","quantity":50,"unit":"گرم","prep_cut":"کاملا خورد شده"},{"recipe_id":"REC-1790529928168","ingredient_name":"خیار شور","quantity":150,"unit":"گرم","prep_cut":"رنده شده"},{"recipe_id":"REC-1790529928168","ingredient_name":"نمک","quantity":10,"unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790529928168","ingredient_name":"فلفل سیاه","quantity":3,"unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790529928168","ingredient_name":"سیر تازه","quantity":5,"unit":"گرم","prep_cut":"رنده ریز"},{"recipe_id":"REC-1790529928168","ingredient_name":"تخم گشنیز آسیاب","quantity":3,"unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790530099929","ingredient_name":"مایونز","quantity":1,"unit":"کیلو گرم","prep_cut":""},{"recipe_id":"REC-1790530099929","ingredient_name":"کچاپ","quantity":200,"unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790530099929","ingredient_name":"آبلیمو","quantity":100,"unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790530099929","ingredient_name":"فلفل سیاه","quantity":1,"unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790530099929","ingredient_name":"فلفل دلمه","quantity":140,"unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790530099929","ingredient_name":"روغن مایع","quantity":10,"unit":"گرم","prep_cut":""},{"recipe_id":"REC-1790530099929","ingredient_name":"نمک","quantity":3,"unit":"گرم","prep_cut":"l"}],"feedbacks":[{"timestamp":"2026-09-27T00:38:00.000Z","recipe_id":"REC-1790452167646","chef_name":"AmirParsa","score":4,"comment":"بافت نرم ،تعادل طعم خوبی داره ،زمان پخت خیلی سریع"},{"timestamp":"2026-09-27T21:38:00.000Z","recipe_id":"REC-1790517896432","chef_name":"AmirReza","score":5,"comment":"بافت نون \nروی نون اگ مال و ترد \nداخل نرم و کمی شرین \nسوسیس بافت سفت \nروکش کمی کریسپی"},{"timestamp":"2026-09-29T09:19:00.000Z","recipe_id":"REC-1790529928168","chef_name":"AmirParsa","score":5,"comment":"طعم متعادل"}]}}</script>
 <script>
 /* =========================================================
    Sosisas · Kitchen Recipe OS
@@ -709,18 +1188,33 @@ async function loadAll(isInitial) {
   try {
     const json = await apiGet();
     state.data = normalize(json);
+    state.offline = false;
+    cacheServerData(json);
     // keep unsaved local recipes visible even if server does not know them yet
     drafts.forEach((d, id) => {
       if (d.isNew && !state.data.recipes.some(r => str(r.recipe_id) === id)) state.data.recipes.unshift(Object.assign({}, d.recipe));
     });
     setSync("synced", null);
+    kosOnServer(json);
     renderTeam(); renderCategories(); renderList();
     if (state.selectedRecipeId && !recipeById(state.selectedRecipeId)) state.selectedRecipeId = null;
     renderWorkspace();
     if (!isInitial) toast("داده‌ها از شیت به‌روز شد.", "ok", 2200);
   } catch (e) {
     setSync("error", netMessage(e));
-    toast("دریافت داده ناموفق بود: " + netMessage(e), "err", 5200);
+    // never show an empty kitchen: fall back to the last copy we have (device cache → snapshot built into this file)
+    if (!state.data.recipes.length) {
+      const fb = fallbackData();
+      if (fb) {
+        state.data = normalize(fb.data);
+        state.offline = true;
+        drafts.forEach((d, id) => {
+          if (d.isNew && !state.data.recipes.some(r => str(r.recipe_id) === id)) state.data.recipes.unshift(Object.assign({}, d.recipe));
+        });
+        toast("شیت در دسترس نیست — آخرین نسخهٔ ذخیره‌شده (" + fb.label + ") نمایش داده شد. تغییرات تازه روی همین دستگاه نگه داشته می‌شود.", "err", 7000);
+      } else toast("دریافت داده ناموفق بود: " + netMessage(e), "err", 5200);
+    } else toast("دریافت داده ناموفق بود: " + netMessage(e), "err", 5200);
+    state.loadedOnce = true; paintLocalNotes(); repaintMod();
     renderTeam(); renderCategories(); renderList(); renderWorkspace();
   } finally { loading = false; }
 }
@@ -752,12 +1246,13 @@ function getDraft(id) {
 function renderTeam() {
   const sel = $("#chefSel");
   const names = [];
-  state.data.team.forEach(t => { const n = str(t.chef_name).trim(); if (n && !names.includes(n)) names.push(n); });
+  const team = effectiveTeam();
+  team.forEach(t => { const n = str(t.chef_name).trim(); if (n && !names.includes(n)) names.push(n); });
   if (state.activeChef && !names.includes(state.activeChef)) names.push(state.activeChef);
   sel.textContent = "";
   sel.appendChild(new Option(names.length ? "انتخاب کن…" : "تیم خالی است", ""));
   names.forEach(n => {
-    const t = state.data.team.find(x => str(x.chef_name).trim() === n);
+    const t = team.find(x => str(x.chef_name).trim() === n);
     const o = new Option(n + (t && t.station ? " · " + t.station : ""), n);
     sel.appendChild(o);
   });
@@ -851,7 +1346,7 @@ function selectRecipe(id) {
   if (id === state.selectedRecipeId) { setView("editor"); return; }
   flushAutosave();
   state.selectedRecipeId = id;
-  ui.fbScore = 0; ui.fbComment = "";
+  ui.fbScore = 0; ui.fbComment = ""; ui.instrEdit = false;
   renderList();
   renderWorkspace();
   setView("editor");
@@ -919,6 +1414,16 @@ function renderWorkspace() {
     if (last) { const f = last.querySelector("input"); if (f) f.focus(); }
     markDirty(d);
   });
+
+  // instructions: readable preview ⇄ editor, plus the single-page recipe card
+  $('[data-f="instrView"]', w).addEventListener("click", () => openRecipeCard(id));
+  $('[data-f="instrView"]', w).addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openRecipeCard(id); } });
+  $('[data-act="cardOpen"]', w).addEventListener("click", () => openRecipeCard(id));
+  $('[data-act="instrToggle"]', w).addEventListener("click", () => {
+    ui.instrEdit = !ui.instrEdit; paintInstr();
+    if (ui.instrEdit) { const ta = $("#fInstr", w); if (ta) ta.focus(); }
+  });
+  paintInstr();
 
   renderCategories();
   paintHead();
@@ -1137,6 +1642,7 @@ function buildFeedbackFormReset() {
 /* ---------- saving ---------- */
 function markDirty(d) {
   d.dirty = true; d.failed = false;
+  persistDrafts();
   paintSaveState(); paintWarn();
   refreshListDot();
   clearTimeout(autosaveTimer);
@@ -1198,6 +1704,7 @@ async function saveNow(manual) {
     toast("ذخیره ناموفق بود: " + netMessage(e) + " — تغییرات در همین صفحه محفوظ است.", "err", 5500);
   } finally {
     saving = false; d._inflight = false;
+    persistDrafts();
     if (state.selectedRecipeId === id) { paintHead(); paintSaveState(); }
     renderList(); renderCategoriesSoft();
     if (saveQueued) {
@@ -1237,20 +1744,1388 @@ function bind() {
     if (document.body.dataset.view === "editor") { flushAutosave(); setView("list"); }
   });
   window.addEventListener("beforeunload", e => {
+    persistDrafts(); persistNow();
     let pending = false; drafts.forEach(d => { if (d.dirty) pending = true; });
     if (pending) { e.preventDefault(); e.returnValue = ""; }
   });
+  document.addEventListener("visibilitychange", () => { if (document.hidden) { persistDrafts(); persistNow(); } });
   // units suggestion list
   const ul = document.createElement("datalist"); ul.id = "unitList";
   ["گرم", "کیلوگرم", "میلی‌لیتر", "لیتر", "عدد", "قاشق غذاخوری", "قاشق چای‌خوری", "پیمانه", "برش", "پرس"].forEach(u => ul.appendChild(new Option(u)));
   document.body.appendChild(ul);
 }
 
+/* =========================================================
+   v2 · LOCAL STORE + OUTBOX  (offline-first, never loses data)
+   ---------------------------------------------------------
+   Everything the new modules record is written to this device
+   first (localStorage) and queued in an outbox. When the Apps
+   Script reports `kos.version >= 2`, the outbox is sent with the
+   single action "kos_batch". Until then the data stays here.
+   ========================================================= */
+const LS_V2 = "sosisas.kitchen.v2";
+const KOS_TABLES = ["inventory_items", "stock_moves", "waste_log", "tickets", "daily_reports", "settings"];
+const local = (() => {
+  let j = null;
+  try { j = JSON.parse(lsGet(LS_V2) || "null"); } catch (e) { j = null; }
+  if (!j || typeof j !== "object") j = {};
+  j.tables = j.tables && typeof j.tables === "object" ? j.tables : {};
+  KOS_TABLES.forEach(t => { if (!Array.isArray(j.tables[t])) j.tables[t] = []; });
+  j.outbox = Array.isArray(j.outbox) ? j.outbox : [];
+  j.drafts = j.drafts && typeof j.drafts === "object" ? j.drafts : {};
+  j.team = Array.isArray(j.team) ? j.team : null;
+  return j;
+})();
+state.backendV2 = false;
+state.offline = false;
+state.loadedOnce = false;
+state.mod = "recipes";
+
+let persistTimer = null;
+function persistNow() { clearTimeout(persistTimer); persistTimer = null; lsSet(LS_V2, JSON.stringify(local)); }
+function persistSoon() { clearTimeout(persistTimer); persistTimer = setTimeout(persistNow, 250); }
+
+function cacheServerData(json) {
+  try { lsSet("sosisas.kitchen.cache", JSON.stringify({ at: new Date().toISOString(), data: json })); } catch (e) {}
+}
+function fallbackData() {
+  try {
+    const c = JSON.parse(lsGet("sosisas.kitchen.cache") || "null");
+    if (c && c.data && Array.isArray(c.data.recipes) && c.data.recipes.length) return { data: c.data, label: "نسخهٔ این دستگاه · " + fmtDate(c.at) };
+  } catch (e) {}
+  try {
+    const s = JSON.parse(($("#seedSnapshot") || {}).textContent || "null");
+    if (s && s.data) return { data: s.data, label: "نسخهٔ داخل فایل · " + fmtDate(s.snapshot_at) };
+  } catch (e) {}
+  return null;
+}
+
+/* ----- unsaved recipe edits survive refresh / closed tab ----- */
+function persistDrafts() {
+  const o = {};
+  drafts.forEach((d, id) => {
+    const hasContent = d.recipe.title.trim() || d.recipe.instructions.trim() || d.ingredients.some(i => str(i.ingredient_name).trim());
+    if ((d.dirty || d.failed || d.isNew) && hasContent) o[id] = { recipe: d.recipe, ingredients: d.ingredients, isNew: !!d.isNew, at: new Date().toISOString() };
+  });
+  local.drafts = o;
+  persistSoon();
+}
+function restoreDrafts() {
+  let n = 0;
+  Object.keys(local.drafts || {}).forEach(id => {
+    const s = local.drafts[id];
+    if (!s || !s.recipe) return;
+    drafts.set(id, {
+      recipe: Object.assign({ recipe_id: id, title: "", category: "", yield_amount: "", instructions: "", last_modified_by: "", updated_at: "" }, s.recipe),
+      ingredients: Array.isArray(s.ingredients) ? s.ingredients : [],
+      dirty: true, isNew: !!s.isNew, failed: false
+    });
+    n++;
+  });
+  if (n) setTimeout(() => toast(faNum(n) + " رسپی تغییرات ذخیره‌نشده داشت که بازیابی شد — بازش کن و «ذخیره» بزن.", "info", 6000), 900);
+}
+
+/* ----- rows + outbox ----- */
+const uid = p => p + "-" + Date.now().toString(36).toUpperCase() + Math.random().toString(36).slice(2, 6).toUpperCase();
+const nowIso = () => new Date().toISOString();
+const tbl = t => local.tables[t];
+const opKey = o => o.op === "team" ? "team" : o.table + "|" + (o.op === "upsert" ? o.row.id : o.id);
+function queueOp(op) {
+  op.oid = uid("OP"); op.at = nowIso();
+  const k = opKey(op);
+  local.outbox = local.outbox.filter(o => opKey(o) !== k);   // newest change wins
+  local.outbox.push(op);
+  persistSoon(); paintPending(); scheduleFlush();
+}
+function upsertRow(t, row) {
+  const r = Object.assign({}, row, { updated_at: nowIso(), updated_by: state.activeChef || "" });
+  if (!r.created_at) r.created_at = r.updated_at;
+  const arr = tbl(t); const i = arr.findIndex(x => x.id === r.id);
+  if (i > -1) arr[i] = r; else arr.push(r);
+  queueOp({ op: "upsert", table: t, row: r });
+  return r;
+}
+function deleteRow(t, id) {
+  local.tables[t] = tbl(t).filter(x => x.id !== id);
+  queueOp({ op: "delete", table: t, id });
+}
+
+let flushing = false, flushTimer = null;
+function scheduleFlush(ms) { clearTimeout(flushTimer); flushTimer = setTimeout(flushOutbox, ms == null ? 900 : ms); }
+async function flushOutbox() {
+  if (flushing || !state.backendV2 || !local.outbox.length) { paintPending(); return; }
+  flushing = true; paintPending();
+  try {
+    while (local.outbox.length) {
+      const batch = local.outbox.slice(0, 40);
+      await apiPost({ action: "kos_batch", ops: batch, by: state.activeChef || "" });
+      const sent = new Set(batch.map(o => o.oid));
+      local.outbox = local.outbox.filter(o => !sent.has(o.oid));
+      const teamOp = batch.filter(o => o.op === "team").pop();
+      if (teamOp && !local.outbox.some(o => o.op === "team")) { state.data.team = teamOp.rows.slice(); local.team = null; }
+      persistNow();
+    }
+  } catch (e) {
+    toast("ارسال به شیت ناموفق بود: " + netMessage(e) + " — داده‌ها روی دستگاه محفوظ است و دوباره تلاش می‌شود.", "err", 5000);
+    scheduleFlush(20000);
+  } finally { flushing = false; paintPending(); }
+}
+
+function kosOnServer(json) {
+  const v = Number(json && json.kos && json.kos.version);
+  state.backendV2 = v >= 2;
+  state.loadedOnce = true;
+  if (state.backendV2) {
+    KOS_TABLES.forEach(t => {
+      if (!Array.isArray(json[t])) return;
+      local.tables[t] = applyPending(t, json[t].map(r => Object.assign({}, r, { id: str(r.id) })));
+    });
+    if (!local.outbox.some(o => o.op === "team")) local.team = null;
+  }
+  persistSoon(); paintPending(); paintLocalNotes(); repaintMod(); scheduleFlush(300);
+}
+function applyPending(t, rows) {
+  let out = rows;
+  local.outbox.forEach(o => {
+    if (o.table !== t) return;
+    if (o.op === "upsert") { const i = out.findIndex(x => x.id === o.row.id); if (i > -1) out[i] = o.row; else out.push(o.row); }
+    else if (o.op === "delete") out = out.filter(x => x.id !== o.id);
+  });
+  return out;
+}
+
+function paintPending() {
+  const c = $("#pendChip"); if (!c) return;
+  const n = local.outbox.length;
+  if (!n) { c.hidden = true; return; }
+  c.hidden = false;
+  c.dataset.s = state.backendV2 ? (flushing ? "sending" : "queued") : "local";
+  c.textContent = (state.backendV2 ? (flushing ? "ارسال " : "در صف ") : "محلی ") + faNum(n);
+  c.title = state.backendV2
+    ? faNum(n) + " تغییر منتظر ارسال به شیت"
+    : "اسکریپت گوگل شیت هنوز بخش‌های جدید را نمی‌شناسد؛ " + faNum(n) + " تغییر روی همین دستگاه نگه داشته شده و بعد از به‌روزرسانی اسکریپت خودکار ارسال می‌شود.";
+}
+function paintLocalNotes() {
+  document.querySelectorAll("[data-local-note]").forEach(n => {
+    n.hidden = !state.loadedOnce || state.backendV2;
+    n.textContent = state.offline
+      ? "اتصال به شیت برقرار نیست. هر چیزی ثبت کنی روی همین دستگاه نگه داشته می‌شود و بعداً ارسال می‌شود."
+      : "این بخش فعلاً فقط روی همین دستگاه ذخیره می‌شود، چون اسکریپت گوگل شیت هنوز به‌روز نشده. ثبت‌ها در صف می‌مانند و بعد از به‌روزرسانی اسکریپت خودکار به شیت می‌روند. تا آن موقع با دکمهٔ «خروجی JSON» بالای صفحه پشتیبان بگیر.";
+  });
+}
+
+/* ----- team + settings ----- */
+function effectiveTeam() { return local.team || state.data.team || []; }
+function saveTeam(rows) {
+  local.team = rows.map(r => ({ chef_name: str(r.chef_name).trim(), station: str(r.station).trim() })).filter(r => r.chef_name);
+  queueOp({ op: "team", rows: local.team });
+  renderTeam(); paintTeam();
+}
+function getSetting(id, def) {
+  const r = tbl("settings").find(x => x.id === id);
+  if (!r) return def;
+  let v = r.value;
+  if (typeof v === "string") { try { v = JSON.parse(v); } catch (e) {} }
+  return v == null || v === "" ? def : v;
+}
+function setSetting(id, value) { upsertRow("settings", { id, value }); }
+const DEFAULT_SECTIONS = ["گریل", "سرخ‌کن", "سرد و سالاد", "سس و مرینیت", "آماده‌سازی (Prep)", "پاس و بسته‌بندی"];
+const sections = () => { const s = getSetting("sections", null); return Array.isArray(s) && s.length ? s : DEFAULT_SECTIONS.slice(); };
+
+/* ----- numbers, names, units, dates ----- */
+function num(v) {
+  if (typeof v === "number") return isFinite(v) ? v : null;
+  const s = str(v).replace(/[۰-۹]/g, d => FA.indexOf(d)).replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d))
+    .replace(/[٫,]/g, ".").replace(/[^\d.\-]/g, "");
+  if (!s) return null;
+  const n = parseFloat(s);
+  return isNaN(n) ? null : n;
+}
+function fmtN(n, d) {
+  if (n === null || n === undefined || isNaN(n)) return "—";
+  const s = Number(n).toLocaleString("en-US", { maximumFractionDigits: d == null ? 2 : d });
+  return faNum(s).replace(/,/g, "٬").replace(/\./g, "٫");
+}
+function normName(s) {
+  return str(s).replace(/[‌‍‎‏]/g, " ").replace(/ي/g, "ی").replace(/ك/g, "ک").replace(/ة/g, "ه")
+    .replace(/[ً-ْ]/g, "").replace(/\s+/g, " ").trim().toLowerCase();
+}
+const normKey = s => normName(s).replace(/آ/g, "ا").replace(/\s/g, "");
+function lev(a, b) {
+  if (a === b) return 0;
+  if (Math.abs(a.length - b.length) > 2) return 9;
+  const m = []; for (let i = 0; i <= a.length; i++) { m[i] = [i]; }
+  for (let j = 1; j <= b.length; j++) m[0][j] = j;
+  for (let i = 1; i <= a.length; i++) for (let j = 1; j <= b.length; j++)
+    m[i][j] = Math.min(m[i - 1][j] + 1, m[i][j - 1] + 1, m[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+  return m[a.length][b.length];
+}
+function similar(a, b) {   // normKey inputs
+  if (!a || !b || a === b) return false;
+  if (Math.min(a.length, b.length) >= 3 && (a.includes(b) || b.includes(a))) return true;
+  return Math.min(a.length, b.length) >= 4 && lev(a, b) <= 1;
+}
+const UNIT_MAP = {
+  "گرم": "g", "گره": "g", "گر": "g", "g": "g", "gr": "g", "gram": "g",
+  "کیلوگرم": "kg", "کیلو گرم": "kg", "کیلو": "kg", "kg": "kg", "کیلوگرم ": "kg",
+  "میلی لیتر": "ml", "میلیلیتر": "ml", "ml": "ml", "سی سی": "ml", "cc": "ml",
+  "لیتر": "l", "l": "l", "lit": "l",
+  "عدد": "pc", "دانه": "pc", "pc": "pc", "pcs": "pc", "تا": "pc"
+};
+const UNIT_BASE = { g: ["g", 1], kg: ["g", 1000], ml: ["ml", 1], l: ["ml", 1000], pc: ["pc", 1] };
+function unitCode(u) { return UNIT_MAP[normName(u)] || null; }
+function convertQty(q, from, to) {
+  if (q === null) return null;
+  if (normName(from) === normName(to)) return q;
+  const a = UNIT_BASE[unitCode(from)], b = UNIT_BASE[unitCode(to)];
+  if (!a || !b || a[0] !== b[0]) return null;
+  return q * a[1] / b[1];
+}
+function stockUnitFor(units) {   // pick a sensible storage unit from the units seen in recipes
+  const codes = units.map(unitCode);
+  if (codes.some(c => c === "g" || c === "kg")) return "کیلوگرم";
+  if (codes.some(c => c === "ml" || c === "l")) return "لیتر";
+  if (codes.some(c => c === "pc")) return "عدد";
+  return units[0] || "عدد";
+}
+const pad2 = n => String(n).padStart(2, "0");
+const ymd = d => d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate());
+function dayStart() { const h = num(getSetting("day_start", 6)); return h === null ? 6 : h; }
+function dayKey(ts) { const d = ts ? new Date(ts) : new Date(); return ymd(new Date(d.getTime() - dayStart() * 3600e3)); }
+function fmtDay(key, withWeekday) {
+  const d = new Date(key + "T12:00:00");
+  if (isNaN(d.getTime())) return faNum(key);
+  try { return d.toLocaleDateString("fa-IR", withWeekday === false ? { day: "numeric", month: "long" } : { weekday: "long", day: "numeric", month: "long" }); }
+  catch (e) { return faNum(key); }
+}
+function fmtTime(ts) {
+  const d = new Date(ts); if (isNaN(d.getTime())) return "";
+  try { return d.toLocaleTimeString("fa-IR", { hour: "2-digit", minute: "2-digit" }); } catch (e) { return faNum(d.toTimeString().slice(0, 5)); }
+}
+const minsBetween = (a, b) => (new Date(b).getTime() - new Date(a).getTime()) / 60000;
+function localInputValue(d) { return ymd(d) + "T" + pad2(d.getHours()) + ":" + pad2(d.getMinutes()); }
+
+/* ----- small DOM helpers ----- */
+const ICON = {
+  edit: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M14 6l4 4"/></svg>',
+  del: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg>',
+  move: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4v16M3 8l4-4 4 4M17 20V4M13 16l4 4 4-4"/></svg>',
+  undo: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14L4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></svg>',
+  x: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>'
+};
+function icoBtn(icon, title, onClick, extra) {
+  const b = el("button", "ico-btn" + (extra ? " " + extra : ""));
+  b.type = "button"; b.title = title; b.setAttribute("aria-label", title); b.innerHTML = ICON[icon];
+  b.addEventListener("click", onClick);
+  return b;
+}
+function btn(label, cls, onClick) { const b = el("button", "btn " + (cls || ""), label); b.type = "button"; if (onClick) b.addEventListener("click", onClick); return b; }
+function field(labelText, input, cls) {
+  const w = el("div", cls || "");
+  const l = el("label", "lbl", labelText);
+  if (!input.id) input.id = uid("f");
+  l.htmlFor = input.id; w.appendChild(l); w.appendChild(input);
+  return w;
+}
+function inp(value, ph, extra) {
+  const i = el("input", "inp" + (extra ? " " + extra : ""));
+  i.type = "text"; i.autocomplete = "off"; i.value = value == null ? "" : value; if (ph) i.placeholder = ph;
+  return i;
+}
+function setDatalist(id, values) {
+  let dl = document.getElementById(id);
+  if (!dl) { dl = document.createElement("datalist"); dl.id = id; document.body.appendChild(dl); }
+  dl.textContent = "";
+  [...new Set(values.filter(Boolean))].forEach(v => dl.appendChild(new Option(v)));
+}
+function needChef() {
+  if (state.activeChef) return false;
+  toast("اول «سرآشپز فعال» را از بالای صفحه انتخاب کن.", "err");
+  const s = $("#chefSel"); if (s) s.focus();
+  return true;
+}
+
+/* ----- modal ----- */
+let modalOnClose = null, modalReturnFocus = null;
+function openModal(title, body, actions, onClose) {
+  const o = $("#ovl");
+  modalReturnFocus = document.activeElement;
+  $("#ovlTitle").textContent = title;
+  const b = $("#ovlBody"); b.textContent = ""; b.appendChild(body);
+  const f = $("#ovlFoot"); f.textContent = ""; (actions || []).forEach(a => f.appendChild(a));
+  modalOnClose = onClose || null;
+  o.hidden = false;
+  setTimeout(() => { const first = b.querySelector("input,select,textarea") || f.querySelector("button"); if (first) first.focus(); }, 30);
+}
+function closeModal() {
+  const o = $("#ovl"); if (o.hidden) return;
+  o.hidden = true;
+  const cb = modalOnClose; modalOnClose = null;
+  if (cb) cb();
+  if (modalReturnFocus && modalReturnFocus.focus) try { modalReturnFocus.focus(); } catch (e) {}
+}
+function confirmBox(title, msg, okLabel, danger) {
+  return new Promise(res => {
+    let done = false;
+    const body = el("div"); body.appendChild(el("p", null, msg));
+    const ok = btn(okLabel || "تأیید", danger ? "danger" : "red", () => { done = true; closeModal(); res(true); });
+    const no = btn("انصراف", "ghost", () => closeModal());
+    openModal(title, body, [ok, no], () => { if (!done) res(false); });
+  });
+}
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+const MODS = ["recipes", "counter", "inv", "waste", "team"];
+function setMod(m) {
+  if (!MODS.includes(m)) m = "recipes";
+  if (state.mod === "recipes" && m !== "recipes") flushAutosave();
+  state.mod = m;
+  document.body.dataset.mod = m;
+  lsSet("sosisas.kitchen.mod", m);
+  document.querySelectorAll("#modNav button").forEach(b => b.setAttribute("aria-current", b.dataset.mod === m ? "page" : "false"));
+  MODS.forEach(x => { const s = document.getElementById("mod-" + x); if (s) s.hidden = x !== m; });
+  if (m !== "recipes") setView("list");
+  repaintMod();
+  clearInterval(ctrTimer); ctrTimer = null;
+  if (m === "counter") ctrTimer = setInterval(paintBoardTimes, 20000);
+}
+function repaintMod() {
+  try {
+    if (state.mod === "inv") paintInv();
+    else if (state.mod === "waste") paintWaste();
+    else if (state.mod === "counter") paintCounter();
+    else if (state.mod === "team") paintTeam();
+  } catch (e) { console.error("[Kitchen OS] render", e); }
+  paintNavBadges();
+}
+function paintNavBadges() {
+  const open = tbl("tickets").filter(t => t.status === "open").length;
+  const no = $("#navOpen"); if (no) { no.hidden = !open; no.textContent = faNum(open); }
+  const low = invItems().filter(i => { const st = stockOf(i), mn = num(i.min_qty); return mn !== null && st < mn; }).length;
+  const nl = $("#navLow"); if (nl) { nl.hidden = !low; nl.textContent = faNum(low); nl.title = "کالای زیر حد سفارش"; }
+}
+
+/* =========================================================
+   3 · FULL RECIPE CARD (single page, no scrolling)
+   ========================================================= */
+function parseSteps(text) {
+  const lines = str(text).split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+  let n = 0;
+  return lines.map(l => {
+    const note = l.match(/^(نکته|توجه|tip|note)\s*[:：\-]\s*(.*)$/i);
+    if (note) return { note: true, t: note[2] || l };
+    const m = l.match(/^[(\[]?([0-9۰-۹]{1,2})[)\]]?\s*[:\-.)ـ–]\s*(.+)$/);
+    n++;
+    return { k: n, t: m ? m[2] : l };
+  });
+}
+function stepsList(steps, cls) {
+  const ol = el("ol", cls || "");
+  steps.forEach(s => {
+    const li = el("li", s.note ? "note" : "");
+    li.appendChild(el("span", "k", s.note ? "!" : faNum(s.k)));
+    li.appendChild(el("span", null, s.t));
+    ol.appendChild(li);
+  });
+  return ol;
+}
+function paintInstr() {
+  const w = $("#work"); const d = curDraft(); if (!d) return;
+  const view = $('[data-f="instrView"]', w), ta = $("#fInstr", w), tg = $('[data-act="instrToggle"]', w);
+  if (!view || !ta) return;
+  const has = !!d.recipe.instructions.trim();
+  const editing = ui.instrEdit || !has;
+  view.hidden = editing; ta.hidden = !editing;
+  tg.hidden = !has;
+  tg.textContent = editing ? "نمایش خوانا" : "ویرایش متن";
+  if (editing) return;
+  view.textContent = "";
+  view.appendChild(stepsList(parseSteps(d.recipe.instructions)));
+  const fade = el("span", "fade", "لمس کن تا کارت کامل باز شود");
+  view.appendChild(fade);
+}
+let rcFitRaf = 0;
+function openRecipeCard(id) {
+  const d = drafts.get(id) || getDraft(id);
+  const r = d.recipe;
+  const card = $("#rcCard"); card.textContent = "";
+  const h = el("header", "rc-h");
+  const t = el("div", "t");
+  t.appendChild(el("small", null, r.recipe_id));
+  t.appendChild(el("h2", null, r.title.trim() || "رسپی بی‌نام"));
+  h.appendChild(t);
+  const meta = el("div", "meta");
+  if (r.category.trim()) meta.appendChild(el("span", null, r.category));
+  if (str(r.yield_amount).trim()) meta.appendChild(el("span", null, "بازده: " + faNum(r.yield_amount)));
+  h.appendChild(meta);
+  const pr = el("button", "icon-btn"); pr.type = "button"; pr.title = "چاپ"; pr.setAttribute("aria-label", "چاپ کارت");
+  pr.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 8V3h10v5"/><rect x="4" y="8" width="16" height="9" rx="2"/><path d="M7 14h10v7H7z"/></svg>';
+  pr.addEventListener("click", () => window.print());
+  h.appendChild(pr);
+  const x = el("button", "icon-btn"); x.type = "button"; x.title = "بستن"; x.setAttribute("aria-label", "بستن کارت");
+  x.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+  x.addEventListener("click", closeRecipeCard);
+  h.appendChild(x);
+  card.appendChild(h);
+
+  const body = el("div", "rc-b");
+  const ings = d.ingredients.filter(i => str(i.ingredient_name).trim());
+  if (ings.length) {
+    const a = el("section", "rc-ing");
+    a.appendChild(el("h4", null, "مواد اولیه"));
+    const ul = el("ul");
+    ings.forEach(i => {
+      const li = el("li");
+      li.appendChild(el("span", "q", faNum(str(i.quantity).trim()) + (str(i.unit).trim() ? " " + i.unit : "")));
+      const nm = el("span", null, i.ingredient_name);
+      if (str(i.prep_cut).trim()) { nm.appendChild(document.createTextNode(" ")); nm.appendChild(el("span", "p", "(" + i.prep_cut + ")")); }
+      li.appendChild(nm);
+      ul.appendChild(li);
+    });
+    a.appendChild(ul);
+    body.appendChild(a);
+  } else body.classList.add("no-ing");
+  const s = el("section", "rc-steps");
+  s.appendChild(el("h4", null, "مراحل"));
+  const steps = parseSteps(r.instructions);
+  if (steps.length) s.appendChild(stepsList(steps)); else s.appendChild(el("p", "rc-empty", "هنوز مرحله‌ای نوشته نشده."));
+  body.appendChild(s);
+  card.appendChild(body);
+
+  $("#rcOvl").hidden = false;
+  document.body.style.overflow = "hidden";
+  fitRecipeCard();
+  x.focus();
+}
+function fitRecipeCard() {
+  cancelAnimationFrame(rcFitRaf);
+  rcFitRaf = requestAnimationFrame(() => {
+    const card = $("#rcCard"), body = card.querySelector(".rc-b");
+    if (!body || $("#rcOvl").hidden) return;
+    body.classList.remove("scroll");
+    const fits = () => body.scrollHeight <= body.clientHeight + 1 && body.scrollWidth <= body.clientWidth + 1;
+    let lo = 9, hi = 34;
+    card.style.setProperty("--fs", hi + "px");
+    if (fits()) return;
+    for (let i = 0; i < 14 && hi - lo > 0.4; i++) {
+      const mid = (lo + hi) / 2;
+      card.style.setProperty("--fs", mid + "px");
+      if (fits()) lo = mid; else hi = mid;
+    }
+    card.style.setProperty("--fs", lo + "px");
+    if (!fits()) body.classList.add("scroll");   // extremely long text: last resort
+  });
+}
+function closeRecipeCard() {
+  const o = $("#rcOvl"); if (o.hidden) return;
+  o.hidden = true; document.body.style.overflow = "";
+  const v = document.querySelector('[data-f="instrView"]'); if (v && !v.hidden) v.focus();
+}
+
+/* =========================================================
+   1 · TEAM
+   ========================================================= */
+let teamEdit = -1;
+function paintTeam() {
+  const ul = $("#teamList"); if (!ul) return;
+  ul.textContent = "";
+  const team = effectiveTeam();
+  setDatalist("stationList", ["سوشف", "گریل", "سرخ‌کن", "سرد و سالاد", "سس و مرینیت", "پاس", "آماده‌سازی"].concat(team.map(t => t.station)));
+  if (!team.length) { ul.appendChild(el("li", "empty", "هنوز کسی در تیم نیست. اولین نفر را اضافه کن.")); return; }
+  team.forEach((t, idx) => {
+    const li = el("li", "row-item");
+    if (idx === teamEdit) {
+      const n = inp(t.chef_name, "نام"); n.setAttribute("aria-label", "نام");
+      const s = inp(t.station, "ایستگاه / نقش"); s.setAttribute("aria-label", "ایستگاه"); s.setAttribute("list", "stationList");
+      li.appendChild(n); li.appendChild(s);
+      const acts = el("div", "acts");
+      const save = () => {
+        const nn = n.value.trim();
+        if (!nn) { toast("نام خالی نمی‌شود.", "err"); n.focus(); return; }
+        if (team.some((x, j) => j !== idx && normKey(x.chef_name) === normKey(nn))) { toast("این نام در تیم هست.", "err"); n.focus(); return; }
+        const old = t.chef_name;
+        const rows = team.map((x, j) => j === idx ? { chef_name: nn, station: s.value.trim() } : x);
+        teamEdit = -1;
+        if (state.activeChef === old && old !== nn) { state.activeChef = nn; lsSet("sosisas.kitchen.activeChef", nn); paintChefAvatar(); paintFbAs(); }
+        saveTeam(rows);
+        toast("مشخصات " + nn + " به‌روز شد.", "ok", 2200);
+      };
+      [n, s].forEach(i => i.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); save(); } if (e.key === "Escape") { teamEdit = -1; paintTeam(); } }));
+      acts.appendChild(btn("ذخیره", "red sm", save));
+      acts.appendChild(btn("انصراف", "ghost sm", () => { teamEdit = -1; paintTeam(); }));
+      li.appendChild(acts);
+      ul.appendChild(li);
+      setTimeout(() => n.focus(), 20);
+      return;
+    }
+    li.appendChild(el("span", "av", initial(t.chef_name)));
+    const info = el("div", "info");
+    const b = el("b", null, t.chef_name);
+    info.appendChild(b);
+    const recs = state.data.recipes.filter(r => str(r.last_modified_by) === t.chef_name).length;
+    const fbs = state.data.feedbacks.filter(f => str(f.chef_name) === t.chef_name).length;
+    info.appendChild(el("span", null, [t.station || "بدون ایستگاه", faNum(recs) + " رسپی ویرایش‌شده", faNum(fbs) + " بازخورد"].join(" · ")));
+    li.appendChild(info);
+    if (state.activeChef === t.chef_name) li.appendChild(el("span", "pill go", "فعال روی این دستگاه"));
+    const acts = el("div", "acts");
+    acts.appendChild(icoBtn("edit", "ویرایش " + t.chef_name, () => { teamEdit = idx; paintTeam(); }));
+    acts.appendChild(icoBtn("del", "حذف " + t.chef_name, async () => {
+      const ok = await confirmBox("حذف از تیم", "«" + t.chef_name + "» از فهرست تیم حذف شود؟ رسپی‌ها و بازخوردهایی که ثبت کرده سر جایشان می‌مانند.", "حذف", true);
+      if (!ok) return;
+      if (state.activeChef === t.chef_name) { state.activeChef = ""; lsSet("sosisas.kitchen.activeChef", ""); paintChefAvatar(); paintWarn(); paintFbAs(); }
+      teamEdit = -1;
+      saveTeam(team.filter((_, j) => j !== idx));
+      toast(t.chef_name + " از تیم حذف شد.", "ok", 2200);
+    }, "del"));
+    li.appendChild(acts);
+    ul.appendChild(li);
+  });
+}
+function addChef(e) {
+  e.preventDefault();
+  const n = $("#tmName"), s = $("#tmStation");
+  const name = n.value.trim();
+  if (!name) { toast("نام سرآشپز را بنویس.", "err"); n.focus(); return; }
+  const team = effectiveTeam();
+  if (team.some(x => normKey(x.chef_name) === normKey(name))) { toast("«" + name + "» قبلاً در تیم هست.", "err"); n.focus(); return; }
+  saveTeam(team.concat([{ chef_name: name, station: s.value.trim() }]));
+  n.value = ""; s.value = ""; n.focus();
+  toast(name + " به تیم اضافه شد.", "ok", 2200);
+}
+
+/* =========================================================
+   4 · INVENTORY
+   ========================================================= */
+const MOVE_TYPES = [
+  { k: "in", label: "ورود / خرید", sign: 1, tone: "in" },
+  { k: "use", label: "مصرف", sign: -1 },
+  { k: "waste", label: "دورریز", sign: -1 },
+  { k: "count", label: "شمارش موجودی", sign: 0, tone: "count" }
+];
+const moveType = k => MOVE_TYPES.find(t => t.k === k) || MOVE_TYPES[1];
+const inv = { tab: "items", search: "", mType: "use", preItem: "", range: "today" };
+const invItems = () => tbl("inventory_items").slice().sort((a, b) => str(a.name).localeCompare(str(b.name), "fa"));
+const itemById = id => tbl("inventory_items").find(i => i.id === id);
+function aliasesOf(i) { return Array.isArray(i.aliases) ? i.aliases : str(i.aliases).split(/[،,]/).map(s => s.trim()).filter(Boolean); }
+function itemIndex() {
+  const m = new Map();
+  tbl("inventory_items").forEach(i => { m.set(normKey(i.name), i); aliasesOf(i).forEach(a => m.set(normKey(a), i)); });
+  return m;
+}
+const matchItem = name => itemIndex().get(normKey(name)) || null;
+function stockOf(item) {
+  let s = 0;
+  tbl("stock_moves").forEach(m => { if (m.item_id === item.id) { const d = num(m.delta); if (d !== null) s += d; } });
+  return Math.round(s * 1000) / 1000;
+}
+function allRecipeIngredients() {
+  const out = [];
+  state.data.recipes.forEach(r => {
+    const id = str(r.recipe_id);
+    const d = drafts.get(id);
+    const title = d ? d.recipe.title : str(r.title);
+    const list = d ? d.ingredients : ingredientsOf(id);
+    list.forEach(i => { if (str(i.ingredient_name).trim()) out.push({ recipe_id: id, title, ingredient_name: str(i.ingredient_name).trim(), quantity: i.quantity, unit: str(i.unit).trim() }); });
+  });
+  return out;
+}
+function recipesUsing(item) {
+  const keys = new Set([normKey(item.name)].concat(aliasesOf(item).map(normKey)));
+  const set = new Map();
+  allRecipeIngredients().forEach(i => { if (keys.has(normKey(i.ingredient_name))) set.set(i.recipe_id, i.title); });
+  return [...set.values()];
+}
+function scanCandidates() {
+  const idx = itemIndex();
+  const ignore = new Set((getSetting("scan_ignore", []) || []).map(normKey));
+  const groups = new Map();
+  allRecipeIngredients().forEach(i => {
+    const k = normKey(i.ingredient_name);
+    if (!k || idx.has(k) || ignore.has(k)) return;
+    if (!groups.has(k)) groups.set(k, { key: k, name: i.ingredient_name, units: [], recipes: new Map() });
+    const g = groups.get(k);
+    if (i.unit && !g.units.includes(i.unit)) g.units.push(i.unit);
+    g.recipes.set(i.recipe_id, i.title);
+  });
+  const items = tbl("inventory_items");
+  const list = [...groups.values()];
+  const titleKeys = new Set(state.data.recipes.map(r => normKey(r.title)));
+  list.forEach(g => {
+    g.simItems = items.filter(it => similar(g.key, normKey(it.name)) || aliasesOf(it).some(a => similar(g.key, normKey(a))));
+    g.simCands = list.filter(o => o !== g && similar(g.key, o.key)).map(o => o.name);
+    g.isPrep = titleKeys.has(g.key);
+  });
+  return list.sort((a, b) => b.recipes.size - a.recipes.size || a.name.localeCompare(b.name, "fa"));
+}
+function newItemFromCandidate(g) {
+  return upsertRow("inventory_items", {
+    id: uid("ITM"), name: g.name, category: g.isPrep ? "تولید داخلی (Prep)" : "", unit: stockUnitFor(g.units),
+    min_qty: "", aliases: [], note: ""
+  });
+}
+
+function paintInv() {
+  const items = invItems();
+  const cands = scanCandidates();
+  const today = dayKey();
+  const low = items.filter(i => { const mn = num(i.min_qty); return mn !== null && stockOf(i) < mn; });
+  const k = $("#invKpis"); k.textContent = "";
+  [[faNum(items.length), "کالای ثبت‌شده", ""], [faNum(low.length), "زیر حد سفارش", low.length ? "hot" : ""],
+   [faNum(tbl("stock_moves").filter(m => m.day === today).length), "تراکنش امروز", ""], [faNum(cands.length), "مادهٔ ثبت‌نشده در رسپی‌ها", cands.length ? "gold" : ""]]
+    .forEach(([v, l, c]) => { const d = el("div", "kpi " + c); d.appendChild(el("div", "v", v)); d.appendChild(el("div", "k", l)); k.appendChild(d); });
+  const sc = $("#scanCount"); sc.hidden = !cands.length; sc.textContent = faNum(cands.length);
+  document.querySelectorAll("#invTabs button").forEach(b => b.setAttribute("aria-selected", b.dataset.t === inv.tab ? "true" : "false"));
+  document.querySelectorAll("#mod-inv [data-tp]").forEach(s => { s.hidden = s.dataset.tp !== inv.tab; });
+  setDatalist("itemNameList", items.map(i => i.name).concat(allRecipeIngredients().map(i => i.ingredient_name)));
+  setDatalist("invCatList", ["لبنیات", "گوشت و پروتئین", "نان", "سبزیجات", "سس و چاشنی", "ادویه", "خشکبار و غلات", "روغن", "بسته‌بندی", "تولید داخلی (Prep)"].concat(items.map(i => i.category)));
+  if (inv.tab === "items") paintInvItems(items);
+  else if (inv.tab === "moves") paintMoves(items);
+  else if (inv.tab === "sections") paintSections();
+  else if (inv.tab === "scan") paintScan(cands);
+}
+function paintInvItems(items) {
+  const box = $("#invItems"); box.textContent = "";
+  const q = normName(inv.search);
+  const list = items.filter(i => !q || normName(i.name + " " + aliasesOf(i).join(" ") + " " + str(i.category)).includes(q));
+  if (!items.length) {
+    const e = el("div", "empty");
+    e.appendChild(el("div", null, "هنوز کالایی ثبت نشده."));
+    const b = btn("یافتن مواد اولیه از رسپی‌ها", "teal sm", () => { inv.tab = "scan"; paintInv(); });
+    b.style.marginTop = "10px"; e.appendChild(b);
+    box.appendChild(e); return;
+  }
+  if (!list.length) { box.appendChild(el("div", "empty", "چیزی با این جستجو پیدا نشد.")); return; }
+  const wrap = el("div", "tbl-wrap"); const t = el("table", "tbl");
+  const th = el("thead"); const hr = el("tr");
+  ["کالا", "دسته", "موجودی", "حد سفارش", "وضعیت", "در رسپی‌ها", ""].forEach(h => hr.appendChild(el("th", null, h)));
+  th.appendChild(hr); t.appendChild(th);
+  const tb = el("tbody");
+  list.forEach(i => {
+    const tr = el("tr");
+    const st = stockOf(i), mn = num(i.min_qty);
+    const td1 = el("td"); td1.appendChild(el("b", null, i.name));
+    const al = aliasesOf(i); if (al.length) td1.appendChild(el("span", "sub", "نام‌های دیگر: " + al.join("، ")));
+    tr.appendChild(td1);
+    tr.appendChild(el("td", "dim", i.category || "—"));
+    const hasMoves = tbl("stock_moves").some(m => m.item_id === i.id);
+    tr.appendChild(el("td", "n", hasMoves ? fmtN(st) + " " + (i.unit || "") : "—"));
+    tr.appendChild(el("td", "n dim", mn !== null ? fmtN(mn) + " " + (i.unit || "") : "—"));
+    const tds = el("td");
+    if (!hasMoves) tds.appendChild(el("span", "pill", "بدون شمارش"));
+    else if (mn !== null && st < mn) tds.appendChild(el("span", "pill bad", "زیر حد"));
+    else if (st <= 0) tds.appendChild(el("span", "pill warn", "تمام شده"));
+    else tds.appendChild(el("span", "pill go", "کافی"));
+    tr.appendChild(tds);
+    const used = recipesUsing(i);
+    const tdu = el("td", "dim", used.length ? faNum(used.length) + " رسپی" : "—"); if (used.length) tdu.title = used.join("، ");
+    tr.appendChild(tdu);
+    const ta = el("td"); ta.style.whiteSpace = "nowrap";
+    ta.appendChild(icoBtn("move", "ثبت ورود / مصرف برای " + i.name, () => { inv.preItem = i.id; inv.tab = "moves"; paintInv(); }));
+    ta.appendChild(icoBtn("edit", "ویرایش " + i.name, () => editItem(i)));
+    ta.appendChild(icoBtn("del", "حذف " + i.name, async () => {
+      const n = tbl("stock_moves").filter(m => m.item_id === i.id).length;
+      const ok = await confirmBox("حذف کالا", "«" + i.name + "» از انبار حذف شود؟" + (n ? " " + faNum(n) + " تراکنش ثبت‌شده‌اش برای سابقه باقی می‌ماند." : ""), "حذف", true);
+      if (!ok) return;
+      deleteRow("inventory_items", i.id); paintInv(); paintNavBadges();
+    }, "del"));
+    tr.appendChild(ta);
+    tb.appendChild(tr);
+  });
+  t.appendChild(tb); wrap.appendChild(t); box.appendChild(wrap);
+}
+function editItem(item) {
+  const isNew = !item;
+  const it = item ? Object.assign({}, item) : { id: uid("ITM"), name: "", category: "", unit: "کیلوگرم", min_qty: "", aliases: [], note: "" };
+  const body = el("div", "fgrid");
+  const n = inp(it.name, "مثلاً: مایونز"), c = inp(it.category, "لبنیات، سس…"), u = inp(it.unit, "کیلوگرم، لیتر، عدد"),
+        mn = inp(it.min_qty === "" || it.min_qty == null ? "" : faNum(it.min_qty), "مثلاً: ۵", "num"),
+        al = inp(aliasesOf(it).join("، "), "نام‌هایی که در رسپی‌ها آمده، با ویرگول"), no = inp(it.note, "اختیاری");
+  c.setAttribute("list", "invCatList"); u.setAttribute("list", "unitList"); mn.inputMode = "decimal";
+  body.appendChild(field("نام کالا *", n, "span2"));
+  body.appendChild(field("دسته", c));
+  body.appendChild(field("واحد انبار", u));
+  body.appendChild(field("حد سفارش (کمتر از این = هشدار)", mn, "span2"));
+  body.appendChild(field("نام‌های دیگر در رسپی‌ها", al, "span2"));
+  body.appendChild(field("یادداشت", no, "span2"));
+  const save = btn(isNew ? "افزودن کالا" : "ذخیره", "red", () => {
+    const name = n.value.trim();
+    if (!name) { toast("نام کالا لازم است.", "err"); n.focus(); return; }
+    const dup = tbl("inventory_items").find(x => x.id !== it.id && normKey(x.name) === normKey(name));
+    if (dup) { toast("کالایی با این نام هست.", "err"); n.focus(); return; }
+    const oldUnit = it.unit;
+    upsertRow("inventory_items", Object.assign(it, {
+      name, category: c.value.trim(), unit: u.value.trim() || "عدد", min_qty: num(mn.value) === null ? "" : num(mn.value),
+      aliases: al.value.split(/[،,]/).map(s => s.trim()).filter(Boolean), note: no.value.trim()
+    }));
+    if (!isNew && oldUnit && normName(oldUnit) !== normName(it.unit) && tbl("stock_moves").some(m => m.item_id === it.id))
+      toast("واحد عوض شد؛ تراکنش‌های قبلی با واحد قبلی ثبت شده‌اند. یک «شمارش موجودی» تازه ثبت کن.", "info", 6500);
+    closeModal(); paintInv(); paintNavBadges();
+    toast(isNew ? "کالا اضافه شد." : "کالا به‌روز شد.", "ok", 2000);
+  });
+  body.addEventListener("keydown", e => { if (e.key === "Enter" && e.target.tagName === "INPUT") { e.preventDefault(); save.click(); } });
+  openModal(isNew ? "کالای جدید" : "ویرایش کالا", body, [save, btn("انصراف", "ghost", closeModal)]);
+}
+
+function paintMoves(items) {
+  const sel = $("#mItem"); const cur = inv.preItem || sel.value;
+  sel.textContent = "";
+  sel.appendChild(new Option(items.length ? "انتخاب کالا…" : "اول یک کالا ثبت کن", ""));
+  items.forEach(i => sel.appendChild(new Option(i.name + " (" + (i.unit || "—") + ")", i.id)));
+  if (cur && itemById(cur)) sel.value = cur;
+  if (inv.preItem) { const it = itemById(inv.preItem); if (it) $("#mUnit").value = it.unit || ""; inv.preItem = ""; }
+  const seg = $("#mType"); seg.textContent = "";
+  MOVE_TYPES.forEach(t => {
+    const b = el("button", null, t.label); b.type = "button"; if (t.tone) b.dataset.tone = t.tone;
+    b.setAttribute("aria-pressed", inv.mType === t.k ? "true" : "false");
+    b.addEventListener("click", () => { inv.mType = t.k; paintMoves(invItems()); });
+    seg.appendChild(b);
+  });
+  const ms = $("#mSec"); const sv = ms.value;
+  ms.textContent = ""; sections().forEach(s => ms.appendChild(new Option(s, s))); if (sv) ms.value = sv;
+  $("#mSecWrap").hidden = !(inv.mType === "use" || inv.mType === "waste");
+  $("#mQtyLbl").firstChild.textContent = inv.mType === "count" ? "موجودی شمارش‌شده " : "مقدار ";
+  if (!$("#mDate").value) $("#mDate").value = localInputValue(new Date());
+  paintMovePreview();
+  // recent moves
+  const ul = $("#moveList"); ul.textContent = "";
+  const moves = tbl("stock_moves").slice().sort((a, b) => str(b.at).localeCompare(str(a.at))).slice(0, 60);
+  if (!moves.length) { ul.appendChild(el("li", "empty", "هنوز تراکنشی ثبت نشده.")); return; }
+  moves.forEach(m => {
+    const li = el("li", "row-item");
+    const it = itemById(m.item_id);
+    const info = el("div", "info");
+    const d = num(m.delta);
+    info.appendChild(el("b", null, (it ? it.name : m.item_name || "کالای حذف‌شده")));
+    info.appendChild(el("span", null, [fmtDay(m.day, false) + " " + fmtTime(m.at), m.section, m.chef, m.note].filter(Boolean).join(" · ")));
+    li.appendChild(info);
+    const t = moveType(m.type);
+    li.appendChild(el("span", "pill " + (m.type === "in" ? "go" : m.type === "count" ? "teal" : m.type === "waste" ? "bad" : "warn"), t.label));
+    li.appendChild(el("span", "num", (m.type === "count" ? "= " + fmtN(num(m.counted)) : (d > 0 ? "+" : "") + fmtN(d)) + " " + (it ? it.unit : m.unit)));
+    li.appendChild(icoBtn("undo", "حذف این تراکنش", async () => {
+      const ok = await confirmBox("حذف تراکنش", "این تراکنش حذف شود؟ موجودی دوباره محاسبه می‌شود.", "حذف", true);
+      if (ok) { deleteRow("stock_moves", m.id); paintInv(); paintNavBadges(); }
+    }, "del"));
+    ul.appendChild(li);
+  });
+}
+function movePlan() {
+  const it = itemById($("#mItem").value);
+  if (!it) return { err: "کالا را انتخاب کن." };
+  const q = num($("#mQty").value);
+  if (q === null) return { it, err: "" };
+  if (q < 0) return { it, err: "مقدار منفی وارد نکن؛ نوع تراکنش را عوض کن." };
+  const unit = $("#mUnit").value.trim() || it.unit;
+  const qi = convertQty(q, unit, it.unit || unit);
+  if (qi === null) return { it, err: "واحد «" + unit + "» به واحد انبار «" + it.unit + "» تبدیل‌پذیر نیست." };
+  const cur = stockOf(it);
+  const t = moveType(inv.mType);
+  const delta = inv.mType === "count" ? qi - cur : t.sign * qi;
+  return { it, q, unit, qi, cur, delta, next: cur + delta };
+}
+function paintMovePreview() {
+  const p = $("#mPrev"); p.textContent = ""; p.classList.remove("bad");
+  const plan = movePlan();
+  if (plan.err) { if (plan.it || plan.err !== "کالا را انتخاب کن.") { p.classList.add("bad"); p.textContent = plan.err; } return; }
+  if (!plan.it) return;
+  p.append("موجودی فعلی ");
+  p.appendChild(el("b", null, fmtN(stockOf(plan.it)) + " " + plan.it.unit));
+  if (plan.delta === undefined) return;
+  p.appendChild(el("span", "arrow", " ← "));
+  p.append("بعد از ثبت ");
+  p.appendChild(el("b", null, fmtN(plan.next) + " " + plan.it.unit));
+  if (plan.next < 0) { p.classList.add("bad"); p.append(" (منفی — احتمالاً ورود کالا ثبت نشده)"); }
+}
+function submitMove(e) {
+  e.preventDefault();
+  if (needChef()) return;
+  const plan = movePlan();
+  if (plan.err || plan.delta === undefined) { toast(plan.err || "مقدار را وارد کن.", "err"); return; }
+  const dt = $("#mDate").value ? new Date($("#mDate").value) : new Date();
+  const at = isNaN(dt.getTime()) ? nowIso() : dt.toISOString();
+  upsertRow("stock_moves", {
+    id: uid("MOV"), at, day: dayKey(at), item_id: plan.it.id, item_name: plan.it.name, type: inv.mType,
+    qty: plan.q, unit: plan.unit, delta: Math.round(plan.delta * 1000) / 1000, counted: inv.mType === "count" ? plan.qi : "",
+    section: (inv.mType === "use" || inv.mType === "waste") ? $("#mSec").value : "", ref: "", note: $("#mNote").value.trim(), chef: state.activeChef
+  });
+  toast(moveType(inv.mType).label + " «" + plan.it.name + "» ثبت شد.", "ok", 2200);
+  $("#mQty").value = ""; $("#mNote").value = ""; $("#mDate").value = localInputValue(new Date());
+  paintInv(); paintNavBadges();
+  setTimeout(() => $("#mQty").focus(), 20);
+}
+
+function rangeFilter(range) {
+  const today = dayKey();
+  if (range === "all") return () => true;
+  if (range === "today") return m => m.day === today;
+  if (range === "yesterday") { const y = dayKey(Date.now() - 864e5); return m => m.day === y; }
+  const n = Number(range); const from = dayKey(Date.now() - (n - 1) * 864e5);
+  return m => str(m.day) >= from && str(m.day) <= today;
+}
+function paintSections() {
+  $("#secRange").value = inv.range;
+  const secs = sections();
+  const f = rangeFilter(inv.range);
+  const moves = tbl("stock_moves").filter(m => (m.type === "use" || m.type === "waste") && f(m));
+  const box = $("#secReport"); box.textContent = "";
+  if (!moves.length) box.appendChild(el("div", "empty", "در این بازه مصرفی ثبت نشده. از تب «ثبت ورود / مصرف» با نوع «مصرف» یا «دورریز» ثبت کن."));
+  else {
+    const cols = secs.slice(); moves.forEach(m => { const s = m.section || "بدون بخش"; if (!cols.includes(s)) cols.push(s); });
+    const usedCols = cols.filter(c => moves.some(m => (m.section || "بدون بخش") === c));
+    const rows = new Map();
+    moves.forEach(m => {
+      const it = itemById(m.item_id);
+      const key = m.item_id;
+      if (!rows.has(key)) rows.set(key, { name: it ? it.name : m.item_name, unit: it ? it.unit : m.unit, cells: {}, total: 0, waste: 0 });
+      const r = rows.get(key); const q = -(num(m.delta) || 0); const s = m.section || "بدون بخش";
+      r.cells[s] = (r.cells[s] || 0) + q; r.total += q; if (m.type === "waste") r.waste += q;
+    });
+    const wrap = el("div", "tbl-wrap"); const t = el("table", "tbl");
+    const hr = el("tr"); hr.appendChild(el("th", null, "کالا")); usedCols.forEach(c => hr.appendChild(el("th", null, c)));
+    hr.appendChild(el("th", null, "جمع")); hr.appendChild(el("th", null, "از این دورریز"));
+    const th = el("thead"); th.appendChild(hr); t.appendChild(th);
+    const tb = el("tbody");
+    [...rows.values()].sort((a, b) => b.total - a.total).forEach(r => {
+      const tr = el("tr"); tr.appendChild(el("td", null, r.name));
+      usedCols.forEach(c => tr.appendChild(el("td", "n" + (r.cells[c] ? "" : " dim"), r.cells[c] ? fmtN(r.cells[c]) : "—")));
+      tr.appendChild(el("td", "n", fmtN(r.total) + " " + r.unit));
+      tr.appendChild(el("td", "n dim", r.waste ? fmtN(r.waste) : "—"));
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb);
+    const tf = el("tfoot"); const fr = el("tr"); fr.appendChild(el("td", null, "تعداد ثبت"));
+    usedCols.forEach(c => fr.appendChild(el("td", "n", faNum(moves.filter(m => (m.section || "بدون بخش") === c).length))));
+    fr.appendChild(el("td", "n", faNum(moves.length))); fr.appendChild(el("td"));
+    tf.appendChild(fr); t.appendChild(tf);
+    wrap.appendChild(t); box.appendChild(wrap);
+  }
+  const chips = $("#secChips"); chips.textContent = "";
+  secs.forEach(s => {
+    const c = el("span", "chip-x"); c.appendChild(el("span", null, s));
+    const x = el("button"); x.type = "button"; x.title = "حذف بخش " + s; x.setAttribute("aria-label", "حذف بخش " + s); x.innerHTML = ICON.x;
+    x.addEventListener("click", () => { if (secs.length <= 1) { toast("حداقل یک بخش لازم است.", "err"); return; } setSetting("sections", secs.filter(v => v !== s)); paintSections(); });
+    c.appendChild(x); chips.appendChild(c);
+  });
+}
+function paintScan(cands) {
+  const box = $("#scanList"); box.textContent = "";
+  const noSim = cands.filter(g => !g.simItems.length && !g.simCands.length);
+  const all = $("#scanAll"); all.disabled = !noSim.length; all.textContent = "ثبت همهٔ موارد بدون شباهت (" + faNum(noSim.length) + ")";
+  if (!cands.length) { box.appendChild(el("div", "empty", "همهٔ مواد اولیهٔ رسپی‌ها در انبار ثبت شده‌اند.")); return; }
+  const items = invItems();
+  cands.forEach(g => {
+    const row = el("div", "scan-row");
+    const l = el("div");
+    l.appendChild(el("div", "nm", g.name));
+    const meta = el("div", "meta");
+    const titles = [...g.recipes.values()];
+    const rc = el("span", null, "در " + faNum(titles.length) + " رسپی: " + titles.slice(0, 3).join("، ") + (titles.length > 3 ? "…" : "")); rc.title = titles.join("، ");
+    meta.appendChild(rc);
+    if (g.units.length) meta.appendChild(el("span", null, "واحدها: " + g.units.join("، ")));
+    if (g.isPrep) meta.appendChild(el("span", "pill teal", "خودش یک رسپی است"));
+    l.appendChild(meta);
+    row.appendChild(l);
+    const acts = el("div", "acts");
+    acts.appendChild(btn("ثبت به‌عنوان کالا", "teal sm", () => { newItemFromCandidate(g); toast("«" + g.name + "» به انبار اضافه شد (" + stockUnitFor(g.units) + ").", "ok", 2200); paintInv(); }));
+    if (items.length) {
+      const sel = el("select", "inp sm"); sel.setAttribute("aria-label", "ادغام «" + g.name + "» با کالای موجود");
+      sel.appendChild(new Option("ادغام با…", ""));
+      const sims = new Set(g.simItems.map(i => i.id));
+      g.simItems.forEach(i => sel.appendChild(new Option("≈ " + i.name, i.id)));
+      items.filter(i => !sims.has(i.id)).forEach(i => sel.appendChild(new Option(i.name, i.id)));
+      sel.addEventListener("change", () => {
+        const it = itemById(sel.value); if (!it) return;
+        upsertRow("inventory_items", Object.assign({}, it, { aliases: aliasesOf(it).concat([g.name]) }));
+        toast("«" + g.name + "» به‌عنوان نام دیگر «" + it.name + "» ثبت شد.", "ok", 2600); paintInv();
+      });
+      acts.appendChild(sel);
+    }
+    acts.appendChild(btn("نادیده", "ghost sm", () => {
+      setSetting("scan_ignore", (getSetting("scan_ignore", []) || []).concat([g.name]));
+      toast("«" + g.name + "» دیگر پیشنهاد نمی‌شود.", "info", 2200); paintInv();
+    }));
+    row.appendChild(acts);
+    if (g.simItems.length || g.simCands.length) {
+      const s = el("div", "sim");
+      s.appendChild(el("span", null, "شبیه: " + g.simItems.map(i => i.name + " (در انبار)").concat(g.simCands).join("، ") + " — شاید یک ماده با دو املا باشد."));
+      row.appendChild(s);
+    }
+    box.appendChild(row);
+  });
+}
+
+/* =========================================================
+   2 · WASTE / YIELD LOG
+   ========================================================= */
+const PROCESSES = ["پاک‌کردن / پوست‌گیری", "برش و پرتال‌کردن", "آب‌پز / بخارپز", "سرخ‌کردن", "گریل / کبابی", "تفت / کاراملی", "پخت در فر", "یخ‌زدایی", "آب‌گیری / فیلتر", "سایر"];
+const REASONS = ["پوست", "ریشه و ساقه", "هسته و دانه", "استخوان", "چربی اضافه", "تبخیر آب", "آب یخ‌زدایی", "سوختگی", "خراب / تاریخ گذشته", "باقی‌ماندهٔ ظرف", "سایر"];
+const wf = { filter: "" };
+function yieldClass(p) { return p >= 85 ? "" : p >= 60 ? "mid" : "low"; }
+function wasteCalc() {
+  const g = num($("#wGross").value), n = num($("#wNet").value);
+  if (g === null || n === null || g <= 0 || n < 0) return null;
+  const y = n / g * 100;
+  return { g, n, y, w: g - n, wp: 100 - y };
+}
+function paintWasteCalc() {
+  const box = $("#wCalc"); box.textContent = "";
+  const c = wasteCalc(); const u = $("#wUnit").value.trim();
+  if (!c) { box.appendChild(el("div", "muted", "مقدار قبل و بعد را وارد کن تا بازده حساب شود.")); return; }
+  const l = el("div");
+  const big = el("div", "big " + yieldClass(c.y)); big.append(fmtN(c.y, 1)); big.appendChild(el("small", null, "٪"));
+  l.appendChild(big); l.appendChild(el("div", "lbl2", "بازده"));
+  box.appendChild(l);
+  const m = el("div", "meter");
+  const bar = el("div", "ybar"); const i = el("i"); i.style.width = Math.min(100, c.y) + "%"; bar.appendChild(i); m.appendChild(bar);
+  const lg = el("div", "legend");
+  const a = el("span"); a.append("قابل استفاده "); a.appendChild(el("b", null, fmtN(c.n) + " " + u)); lg.appendChild(a);
+  const b = el("span");
+  if (c.w >= 0) { b.append("دورریز / کاهش "); b.appendChild(el("b", null, fmtN(c.w) + " " + u + " (" + fmtN(c.wp, 1) + "٪)")); }
+  else { b.append("افزایش وزن "); b.appendChild(el("b", null, fmtN(-c.w) + " " + u)); }
+  lg.appendChild(b);
+  m.appendChild(lg);
+  box.appendChild(m);
+  const it = matchItem($("#wItem").value);
+  $("#wStockWrap").hidden = !(it && c.w > 0);
+}
+function submitWaste(e) {
+  e.preventDefault();
+  if (needChef()) return;
+  const name = $("#wItem").value.trim();
+  if (!name) { toast("نام ماده را بنویس.", "err"); $("#wItem").focus(); return; }
+  const c = wasteCalc();
+  if (!c) { toast("مقدار قبل و بعد از فرایند را درست وارد کن.", "err"); $("#wGross").focus(); return; }
+  const unit = $("#wUnit").value.trim() || "گرم";
+  const it = matchItem(name);
+  const at = nowIso();
+  const row = upsertRow("waste_log", {
+    id: uid("WST"), at, day: dayKey(at), item_name: name, item_id: it ? it.id : "", process: $("#wProc").value,
+    gross: c.g, net: c.n, unit, yield_pct: Math.round(c.y * 10) / 10, waste_qty: Math.round(c.w * 1000) / 1000,
+    reason: $("#wReason").value.trim(), note: $("#wNote").value.trim(), chef: state.activeChef
+  });
+  if (it && c.w > 0 && $("#wStock").checked) {
+    const qi = convertQty(c.w, unit, it.unit);
+    if (qi === null) toast("واحد «" + unit + "» به واحد انبار «" + it.unit + "» تبدیل نشد؛ فقط در لاگ ثبت شد.", "err", 5000);
+    else upsertRow("stock_moves", {
+      id: uid("MOV"), at, day: row.day, item_id: it.id, item_name: it.name, type: "waste", qty: c.w, unit,
+      delta: -Math.round(qi * 1000) / 1000, counted: "", section: "آماده‌سازی (Prep)", ref: row.id, note: "از لاگ دورریز · " + row.process, chef: state.activeChef
+    });
+  }
+  toast("بازده " + fmtN(c.y, 1) + "٪ برای «" + name + "» ثبت شد.", "ok", 2600);
+  ["#wGross", "#wNet", "#wNote"].forEach(s => { $(s).value = ""; });
+  $("#wStock").checked = false;
+  paintWaste();
+  $("#wGross").focus();
+}
+function paintWaste() {
+  const proc = $("#wProc");
+  if (!proc.options.length) PROCESSES.forEach(p => proc.appendChild(new Option(p, p)));
+  setDatalist("itemNameList", invItems().map(i => i.name).concat(allRecipeIngredients().map(i => i.ingredient_name)));
+  setDatalist("reasonList", REASONS.concat(tbl("waste_log").map(w => w.reason)));
+  paintWasteCalc();
+  const logs = tbl("waste_log").slice().sort((a, b) => str(b.at).localeCompare(str(a.at)));
+  // summary
+  const sum = $("#wSummary"); sum.textContent = "";
+  const groups = new Map();
+  logs.forEach(w => {
+    const k = normKey(w.item_name) + "|" + w.process;
+    if (!groups.has(k)) groups.set(k, { name: w.item_name, process: w.process, ys: [], last: w.at, unit: w.unit, g: 0, n: 0 });
+    const gr = groups.get(k); const y = num(w.yield_pct); if (y !== null) gr.ys.push(y);
+    const gg = convertQty(num(w.gross), w.unit, gr.unit), nn = convertQty(num(w.net), w.unit, gr.unit);
+    if (gg !== null && nn !== null) { gr.g += gg; gr.n += nn; }
+  });
+  if (!groups.size) sum.appendChild(el("div", "empty", "هنوز تستی ثبت نشده. اولین تست بازده را از فرم کنار ثبت کن."));
+  [...groups.values()].sort((a, b) => a.name.localeCompare(b.name, "fa")).forEach(g => {
+    // weight-based yield (total usable ÷ total raw) — the figure purchasing needs; falls back to mean of tests
+    const avg = g.g > 0 ? g.n / g.g * 100 : g.ys.reduce((a, b) => a + b, 0) / (g.ys.length || 1);
+    const d = el("div", "it");
+    const l = el("div"); l.appendChild(el("b", null, g.name)); l.appendChild(el("div", "meta", g.process));
+    d.appendChild(l);
+    const p = el("div", "pct"); p.style.color = avg >= 85 ? "var(--go)" : avg >= 60 ? "var(--gold)" : "var(--sauce-ink)"; p.textContent = fmtN(avg, 1) + "٪";
+    d.appendChild(p);
+    const meta = el("div", "meta");
+    meta.appendChild(el("span", null, faNum(g.ys.length) + " تست"));
+    if (g.ys.length > 1) meta.appendChild(el("span", null, "کمینه " + fmtN(Math.min(...g.ys), 1) + "٪ · بیشینه " + fmtN(Math.max(...g.ys), 1) + "٪"));
+    if (avg > 0) meta.appendChild(el("span", null, "برای " + fmtN(1000) + " " + g.unit + " خالص ≈ " + fmtN(1000 / (avg / 100), 0) + " " + g.unit + " خام لازم است"));
+    meta.appendChild(el("span", null, "آخرین: " + fmtDay(dayKey(g.last), false)));
+    d.appendChild(meta);
+    sum.appendChild(d);
+  });
+  // table
+  const box = $("#wTable"); box.textContent = "";
+  const q = normName(wf.filter);
+  const list = logs.filter(w => !q || normName(w.item_name + " " + w.process + " " + w.reason).includes(q)).slice(0, 300);
+  if (!list.length) { box.appendChild(el("div", "empty", logs.length ? "چیزی با این فیلتر نیست." : "لاگ خالی است.")); return; }
+  const wrap = el("div", "tbl-wrap"); const t = el("table", "tbl");
+  const hr = el("tr"); ["زمان", "ماده", "فرایند", "قبل ← بعد", "بازده", "دورریز", "علت", "ثبت", ""].forEach(h => hr.appendChild(el("th", null, h)));
+  const th = el("thead"); th.appendChild(hr); t.appendChild(th);
+  const tb = el("tbody");
+  list.forEach(w => {
+    const tr = el("tr");
+    const tdt = el("td", "dim", fmtDay(w.day, false)); tdt.appendChild(el("span", "sub", fmtTime(w.at))); tr.appendChild(tdt);
+    const tdn = el("td"); tdn.appendChild(el("b", null, w.item_name)); if (w.note) tdn.appendChild(el("span", "sub", w.note)); tr.appendChild(tdn);
+    tr.appendChild(el("td", "dim", w.process));
+    tr.appendChild(el("td", "n", fmtN(num(w.gross)) + " ← " + fmtN(num(w.net)) + " " + str(w.unit)));
+    const y = num(w.yield_pct);
+    const ty = el("td"); ty.appendChild(el("span", "pill " + (y >= 85 ? "go" : y >= 60 ? "warn" : "bad"), fmtN(y, 1) + "٪")); tr.appendChild(ty);
+    tr.appendChild(el("td", "n", fmtN(num(w.waste_qty)) + " " + str(w.unit)));
+    tr.appendChild(el("td", "dim", w.reason || "—"));
+    tr.appendChild(el("td", "dim", w.chef || "—"));
+    const ta = el("td");
+    ta.appendChild(icoBtn("del", "حذف این ردیف", async () => {
+      const linked = tbl("stock_moves").find(m => m.ref === w.id);
+      const ok = await confirmBox("حذف از لاگ", "این تست بازده حذف شود؟" + (linked ? " کسر انبارِ مربوط به آن هم برگردانده می‌شود." : ""), "حذف", true);
+      if (!ok) return;
+      deleteRow("waste_log", w.id); if (linked) deleteRow("stock_moves", linked.id);
+      paintWaste();
+    }, "del"));
+    tr.appendChild(ta);
+    tb.appendChild(tr);
+  });
+  t.appendChild(tb); wrap.appendChild(t); box.appendChild(wrap);
+}
+
+/* =========================================================
+   5 · COUNTER (tickets / فیش)
+   ========================================================= */
+let ctrTimer = null;
+const ticketsOf = day => tbl("tickets").filter(t => t.day === day);
+function ticketItems(t) {
+  let v = t.items;
+  if (typeof v === "string") { try { v = JSON.parse(v); } catch (e) { v = []; } }
+  return Array.isArray(v) ? v : [];
+}
+function dayStats(day) {
+  const ts = ticketsOf(day);
+  const done = ts.filter(t => t.status === "done"), voids = ts.filter(t => t.status === "void"), open = ts.filter(t => t.status === "open");
+  const times = done.map(t => minsBetween(t.created_at, t.done_at)).filter(m => m >= 0 && m < 600);
+  const items = {};
+  ts.filter(t => t.status !== "void").forEach(t => ticketItems(t).forEach(i => { items[i.title] = (items[i.title] || 0) + (num(i.qty) || 0); }));
+  const times2 = ts.map(t => t.created_at).sort();
+  return {
+    day, total: ts.length, done: done.length, void: voids.length, open: open.length,
+    avg: times.length ? times.reduce((a, b) => a + b, 0) / times.length : null,
+    items, itemsTotal: Object.values(items).reduce((a, b) => a + b, 0), first: times2[0] || "", last: times2[times2.length - 1] || ""
+  };
+}
+function paintCounter() {
+  const sel = $("#ctrDayStart");
+  if (!sel.options.length) for (let h = 0; h <= 12; h++) sel.appendChild(new Option(h === 0 ? "نیمه‌شب" : "ساعت " + faNum(h) + " صبح", String(h)));
+  sel.value = String(dayStart());
+  const today = dayKey();
+  $("#ctrDay").textContent = "روز کاری " + fmtDay(today) + " — فیش‌هایی که قبل از ساعت " + faNum(dayStart()) + " صبح ثبت شوند جزو روز قبل حساب می‌شوند.";
+  const s = dayStats(today);
+  const k = $("#ctrKpis"); k.textContent = "";
+  [[faNum(s.total), "فیش امروز", ""], [faNum(s.open), "باقی‌مانده (باز)", s.open ? "hot" : ""], [faNum(s.done), "تحویل‌شده", "go"],
+   [faNum(s.void), "لغوشده", ""], [s.avg === null ? "—" : fmtN(s.avg, 1), "میانگین زمان آماده‌سازی (دقیقه)", "gold"], [faNum(s.itemsTotal), "قلم فروخته‌شده", ""]]
+    .forEach(([v, l, c]) => { const d = el("div", "kpi " + c); d.appendChild(el("div", "v", v)); d.appendChild(el("div", "k", l)); k.appendChild(d); });
+  // open board (all open tickets, even from earlier days)
+  const board = $("#ctrBoard"); board.textContent = "";
+  const open = tbl("tickets").filter(t => t.status === "open").sort((a, b) => str(a.created_at).localeCompare(str(b.created_at)));
+  $("#ctrOpenHint").textContent = open.length ? "قدیمی‌ترین اول" : "";
+  if (!open.length) board.appendChild(el("div", "empty", "فیش بازی نیست. با «فیش جدید» ثبت کن."));
+  open.forEach(t => board.appendChild(ticketCard(t)));
+  paintBoardTimes();
+  // items today
+  const ib = $("#ctrItems"); ib.textContent = "";
+  const entries = Object.entries(s.items).sort((a, b) => b[1] - a[1]);
+  if (!entries.length) ib.appendChild(el("div", "empty", "هنوز قلمی ثبت نشده."));
+  else {
+    const ul = el("ul", "rows compact");
+    entries.forEach(([n, q]) => { const li = el("li", "row-item"); const i = el("div", "info"); i.appendChild(el("b", null, n)); li.appendChild(i); li.appendChild(el("span", "num", faNum(q) + " عدد")); ul.appendChild(li); });
+    ib.appendChild(ul);
+  }
+  // closed today
+  const dl = $("#ctrDone"); dl.textContent = "";
+  const closed = ticketsOf(today).filter(t => t.status !== "open").sort((a, b) => str(b.done_at || b.updated_at).localeCompare(str(a.done_at || a.updated_at)));
+  if (!closed.length) dl.appendChild(el("li", "empty", "هنوز فیشی بسته نشده."));
+  closed.slice(0, 40).forEach(t => {
+    const li = el("li", "row-item");
+    li.appendChild(el("span", "num", "#" + faNum(t.no)));
+    const i = el("div", "info");
+    const its = ticketItems(t);
+    i.appendChild(el("b", null, its.length ? its.map(x => faNum(x.qty) + "× " + x.title).join("، ") : "بدون جزئیات"));
+    i.appendChild(el("span", null, fmtTime(t.created_at) + (t.status === "done" ? " · " + fmtN(minsBetween(t.created_at, t.done_at), 0) + " دقیقه · " + (t.done_by || "") : "")));
+    li.appendChild(i);
+    li.appendChild(el("span", "pill " + (t.status === "done" ? "go" : "bad"), t.status === "done" ? "تحویل" : "لغو"));
+    li.appendChild(icoBtn("undo", "بازگرداندن به فیش‌های باز", () => { upsertRow("tickets", Object.assign({}, t, { status: "open", done_at: "", done_by: "" })); paintCounter(); paintNavBadges(); }));
+    dl.appendChild(li);
+  });
+  paintReports();
+}
+function ticketCard(t) {
+  const c = el("div", "tk"); c.dataset.created = t.created_at;
+  const top = el("div", "tk-top");
+  const no = el("div", "tk-no", "#" + faNum(t.no));
+  if (t.day !== dayKey()) no.appendChild(el("small", null, " " + fmtDay(t.day, false)));
+  top.appendChild(no);
+  top.appendChild(el("span", "tk-time"));
+  c.appendChild(top);
+  const its = ticketItems(t);
+  if (its.length) { const ul = el("ul"); its.forEach(i => { const li = el("li"); li.appendChild(el("b", null, faNum(i.qty) + "×")); li.appendChild(el("span", null, i.title)); ul.appendChild(li); }); c.appendChild(ul); }
+  else c.appendChild(el("div", "dim", "بدون جزئیات"));
+  if (t.note) c.appendChild(el("p", "note", t.note));
+  const a = el("div", "tk-acts");
+  a.appendChild(btn("تحویل شد", "go", () => {
+    upsertRow("tickets", Object.assign({}, t, { status: "done", done_at: nowIso(), done_by: state.activeChef || "" }));
+    toast("فیش #" + faNum(t.no) + " تحویل شد.", "ok", 1800); paintCounter(); paintNavBadges();
+  }));
+  a.appendChild(btn("لغو", "ghost", async () => {
+    const ok = await confirmBox("لغو فیش", "فیش #" + faNum(t.no) + " لغو شود؟", "لغو فیش", true);
+    if (!ok) return;
+    upsertRow("tickets", Object.assign({}, t, { status: "void", done_at: nowIso(), done_by: state.activeChef || "" }));
+    paintCounter(); paintNavBadges();
+  }));
+  c.appendChild(a);
+  return c;
+}
+function paintBoardTimes() {
+  document.querySelectorAll("#ctrBoard .tk").forEach(c => {
+    const m = Math.max(0, minsBetween(c.dataset.created, nowIso()));
+    c.classList.toggle("mid", m >= 10 && m < 20); c.classList.toggle("late", m >= 20);
+    const t = c.querySelector(".tk-time");
+    if (t) t.textContent = m < 60 ? faNum(Math.floor(m)) + " دقیقه" : faNum(Math.floor(m / 60)) + " ساعت و " + faNum(Math.floor(m % 60)) + " دقیقه";
+  });
+}
+function newTicket() {
+  if (needChef()) return;
+  const today = dayKey();
+  const nextNo = ticketsOf(today).reduce((m, t) => Math.max(m, num(t.no) || 0), 0) + 1;
+  const qty = {};
+  const body = el("div");
+  body.appendChild(el("p", null, "شمارهٔ فیش: #" + faNum(nextNo) + " — اقلام را انتخاب کن (اختیاری) یا فقط «ثبت فیش» را بزن."));
+  const search = inp("", "جستجوی منو…"); search.type = "search"; search.setAttribute("aria-label", "جستجوی منو");
+  body.appendChild(search);
+  const list = el("div", "menu-list");
+  const sauces = /سس|مرینیت|پیکل|آرد|پوره/;
+  const menu = state.data.recipes.map(r => viewRecipe(r)).filter(r => str(r.title).trim())
+    .sort((a, b) => (sauces.test(str(a.category) + str(a.title)) ? 1 : 0) - (sauces.test(str(b.category) + str(b.title)) ? 1 : 0) || str(a.title).localeCompare(str(b.title), "fa"));
+  const rows = [];
+  menu.forEach(r => {
+    const id = str(r.recipe_id);
+    const row = el("div", "qty-row");
+    const t = el("div", "t", r.title); if (str(r.category).trim()) t.appendChild(el("span", null, r.category));
+    row.appendChild(t);
+    const st = el("div", "stepper");
+    const minus = el("button", null, "−"); minus.type = "button"; minus.setAttribute("aria-label", "کم کردن " + r.title);
+    const out = el("output", null, "۰");
+    const plus = el("button", null, "+"); plus.type = "button"; plus.setAttribute("aria-label", "اضافه کردن " + r.title);
+    const set = v => { qty[id] = Math.max(0, v); out.textContent = faNum(qty[id]); row.classList.toggle("on", qty[id] > 0); };
+    minus.addEventListener("click", () => set((qty[id] || 0) - 1));
+    plus.addEventListener("click", () => set((qty[id] || 0) + 1));
+    st.appendChild(minus); st.appendChild(out); st.appendChild(plus);
+    row.appendChild(st);
+    rows.push({ row, key: normName(r.title + " " + r.category) });
+    list.appendChild(row);
+  });
+  if (!menu.length) list.appendChild(el("div", "empty", "رسپی‌ای برای انتخاب نیست."));
+  search.addEventListener("input", () => { const q = normName(search.value); rows.forEach(x => { x.row.hidden = !!q && !x.key.includes(q); }); });
+  body.appendChild(list);
+  const note = inp("", "یادداشت فیش (مثلاً: بدون پیاز، بیرون‌بر)");
+  body.appendChild(field("یادداشت", note));
+  const save = btn("ثبت فیش", "red", () => {
+    const items = menu.filter(r => qty[str(r.recipe_id)] > 0).map(r => ({ recipe_id: str(r.recipe_id), title: r.title, qty: qty[str(r.recipe_id)] }));
+    const at = nowIso();
+    const no = ticketsOf(dayKey(at)).reduce((m, t) => Math.max(m, num(t.no) || 0), 0) + 1;
+    upsertRow("tickets", { id: uid("TKT"), no, day: dayKey(at), created_at: at, status: "open", done_at: "", items, note: note.value.trim(), created_by: state.activeChef, done_by: "" });
+    closeModal(); paintCounter(); paintNavBadges();
+    toast("فیش #" + faNum(no) + " ثبت شد.", "ok", 1800);
+  });
+  openModal("فیش جدید", body, [save, btn("انصراف", "ghost", closeModal)]);
+}
+function storedReport(day) { return tbl("daily_reports").find(r => r.day === day || r.id === "DAY-" + day); }
+async function closeDay() {
+  if (needChef()) return;
+  const today = dayKey();
+  const s = dayStats(today);
+  if (!s.total) { toast("امروز فیشی ثبت نشده که گزارش شود.", "err"); return; }
+  if (s.open) {
+    const ok = await confirmBox("بستن روز", faNum(s.open) + " فیش هنوز باز است. با همین وضعیت در گزارش به‌عنوان «باقی‌مانده» ثبت شود؟", "ثبت گزارش", false);
+    if (!ok) return;
+  }
+  upsertRow("daily_reports", {
+    id: "DAY-" + today, day: today, total: s.total, done: s.done, void: s.void, open_left: s.open,
+    avg_prep_min: s.avg === null ? "" : Math.round(s.avg * 10) / 10, items_total: s.itemsTotal, breakdown: s.items,
+    closed_at: nowIso(), closed_by: state.activeChef
+  });
+  toast("گزارش " + fmtDay(today) + " ثبت شد.", "ok", 2400);
+  paintCounter();
+}
+function reportRows() {
+  const days = new Set(tbl("tickets").map(t => t.day).filter(Boolean));
+  tbl("daily_reports").forEach(r => days.add(r.day));
+  return [...days].sort().reverse().map(day => {
+    const live = dayStats(day);
+    const st = storedReport(day);
+    if (st && live.total === 0) {   // only the stored report survives (old tickets cleaned up)
+      let bd = st.breakdown; if (typeof bd === "string") { try { bd = JSON.parse(bd); } catch (e) { bd = {}; } }
+      return { day, total: num(st.total) || 0, done: num(st.done) || 0, void: num(st.void) || 0, open: num(st.open_left) || 0, avg: num(st.avg_prep_min), items: bd || {}, itemsTotal: num(st.items_total) || 0, stored: st };
+    }
+    return Object.assign(live, { stored: st || null });
+  });
+}
+function paintReports() {
+  const box = $("#ctrReports"); box.textContent = "";
+  const rows = reportRows();
+  if (!rows.length) { box.appendChild(el("div", "empty", "هنوز گزارشی نیست. با ثبت اولین فیش، گزارش روز ساخته می‌شود.")); return; }
+  rows.slice(0, 60).forEach((r, i) => {
+    const d = el("details", "rep"); if (i === 0) d.open = false;
+    const s = el("summary");
+    const dd = el("div", "d"); dd.appendChild(el("b", null, fmtDay(r.day)));
+    dd.appendChild(el("span", null, r.first ? fmtTime(r.first) + " تا " + fmtTime(r.last) : faNum(r.day)));
+    s.appendChild(dd);
+    [[r.total, "کل فیش"], [r.done, "تحویل"], [r.open, "باقی‌مانده"], [r.void, "لغو"], [r.avg === null ? "—" : fmtN(r.avg, 1), "دقیقه / فیش"]].forEach(([v, l]) => {
+      const c = el("div", "c"); c.appendChild(el("b", null, typeof v === "number" ? faNum(v) : v)); c.appendChild(el("span", null, l)); s.appendChild(c);
+    });
+    const stc = el("div", "st");
+    if (r.stored) {
+      const changed = r.stored && (num(r.stored.total) !== r.total || num(r.stored.done) !== r.done || num(r.stored.open_left) !== r.open);
+      stc.appendChild(el("span", "pill " + (changed ? "warn" : "go"), changed ? "بعد از بستن تغییر کرده" : "بسته‌شده"));
+    } else stc.appendChild(el("span", "pill teal", r.day === dayKey() ? "در جریان" : "بسته نشده"));
+    s.appendChild(stc);
+    d.appendChild(s);
+    const body = el("div", "body");
+    const entries = Object.entries(r.items || {}).sort((a, b) => b[1] - a[1]);
+    if (entries.length) {
+      const wrap = el("div", "tbl-wrap"); wrap.style.marginTop = "10px"; const t = el("table", "tbl");
+      const hr = el("tr"); ["قلم", "تعداد", "سهم"].forEach(h => hr.appendChild(el("th", null, h)));
+      const th = el("thead"); th.appendChild(hr); t.appendChild(th);
+      const tb = el("tbody");
+      entries.forEach(([n, q]) => { const tr = el("tr"); tr.appendChild(el("td", null, n)); tr.appendChild(el("td", "n", faNum(q))); tr.appendChild(el("td", "n dim", fmtN(q / (r.itemsTotal || 1) * 100, 0) + "٪")); tb.appendChild(tr); });
+      t.appendChild(tb); wrap.appendChild(t); body.appendChild(wrap);
+    } else body.appendChild(el("p", "dim", "اقلام فیش‌ها ثبت نشده — فقط تعداد فیش شمرده شده."));
+    if (r.stored) body.appendChild(el("p", "dim", "ثبت گزارش: " + fmtDate(r.stored.closed_at) + (r.stored.closed_by ? " توسط " + r.stored.closed_by : "")));
+    if (!r.stored || r.day === dayKey()) {
+      const b = btn(r.stored ? "به‌روزرسانی گزارش این روز" : "ثبت گزارش این روز", "sm teal", async () => {
+        if (needChef()) return;
+        const live = dayStats(r.day);
+        upsertRow("daily_reports", { id: "DAY-" + r.day, day: r.day, total: live.total, done: live.done, void: live.void, open_left: live.open, avg_prep_min: live.avg === null ? "" : Math.round(live.avg * 10) / 10, items_total: live.itemsTotal, breakdown: live.items, closed_at: nowIso(), closed_by: state.activeChef });
+        toast("گزارش ثبت شد.", "ok", 1800); paintCounter();
+      });
+      b.style.marginTop = "10px"; body.appendChild(b);
+    }
+    d.appendChild(body);
+    box.appendChild(d);
+  });
+}
+
+/* =========================================================
+   6 · FULL JSON EXPORT
+   ========================================================= */
+function exportAll() {
+  persistDrafts();
+  const recipes = state.data.recipes.map(r => {
+    const id = str(r.recipe_id); const d = drafts.get(id);
+    return Object.assign({}, r, d ? d.recipe : {}, { unsaved_changes: !!(d && (d.dirty || d.isNew || d.failed)) });
+  });
+  const items = invItems().map(i => Object.assign({}, i, { aliases: aliasesOf(i), current_stock: stockOf(i), used_in_recipes: recipesUsing(i) }));
+  const out = {
+    meta: {
+      app: "Sosisas · Kitchen Recipe OS", schema_version: 2, exported_at: nowIso(), exported_by: state.activeChef || "",
+      device_timezone: (Intl.DateTimeFormat().resolvedOptions() || {}).timeZone || "", api_url: API_URL,
+      sheet_backend_version: state.backendV2 ? 2 : 1, data_source: state.offline ? "offline-fallback" : "google-sheet",
+      device_only_tables: state.backendV2 ? [] : KOS_TABLES, pending_changes: local.outbox.length,
+      counts: {
+        team: effectiveTeam().length, recipes: recipes.length, ingredients: allRecipeIngredients().length, feedbacks: state.data.feedbacks.length,
+        inventory_items: items.length, stock_moves: tbl("stock_moves").length, waste_log: tbl("waste_log").length, tickets: tbl("tickets").length, daily_reports: reportRows().length
+      }
+    },
+    team: effectiveTeam(),
+    recipes,
+    ingredients: allRecipeIngredients().map(i => ({ recipe_id: i.recipe_id, recipe_title: i.title, ingredient_name: i.ingredient_name, quantity: i.quantity, unit: i.unit, prep_cut: ((drafts.get(i.recipe_id) ? drafts.get(i.recipe_id).ingredients : ingredientsOf(i.recipe_id)).find(x => str(x.ingredient_name).trim() === i.ingredient_name) || {}).prep_cut || "" })),
+    feedbacks: state.data.feedbacks,
+    inventory: { items, moves: tbl("stock_moves"), sections: sections() },
+    waste_log: tbl("waste_log"),
+    counter: { tickets: tbl("tickets"), daily_reports: reportRows().map(r => Object.assign({}, r, { stored: undefined, closed: !!r.stored, closed_at: r.stored ? r.stored.closed_at : "", closed_by: r.stored ? r.stored.closed_by : "" })) },
+    settings: tbl("settings"),
+    pending: { outbox: local.outbox, unsaved_recipe_drafts: local.drafts }
+  };
+  const text = JSON.stringify(out, null, 2);
+  const name = "kitchen-os-" + ymd(new Date()) + "-" + pad2(new Date().getHours()) + pad2(new Date().getMinutes()) + ".json";
+  try {
+    const blob = new Blob([text], { type: "application/json;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a"); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 4000);
+    toast("فایل " + name + " ساخته شد.", "ok", 3200);
+  } catch (e) {
+    const body = el("div");
+    body.appendChild(el("p", null, "دانلود مستقیم پشتیبانی نشد. متن زیر را کپی کن:"));
+    const ta = el("textarea", "inp"); ta.value = text; ta.readOnly = true; ta.style.minHeight = "260px"; ta.style.direction = "ltr";
+    body.appendChild(ta);
+    openModal("خروجی JSON", body, [btn("کپی", "red", () => { ta.select(); try { navigator.clipboard.writeText(text); toast("کپی شد.", "ok"); } catch (er) { document.execCommand("copy"); } }), btn("بستن", "ghost", closeModal)]);
+  }
+}
+
+/* =========================================================
+   bindings
+   ========================================================= */
+function bindV2() {
+  document.querySelectorAll("#modNav button").forEach(b => b.addEventListener("click", () => setMod(b.dataset.mod)));
+  $("#exportBtn").addEventListener("click", exportAll);
+  $("#pendChip").addEventListener("click", () => { if (state.backendV2) flushOutbox(); else toast($("#pendChip").title, "info", 7000); });
+  // header height → sticky sidebar offset
+  const top = $(".top");
+  const setTop = () => document.documentElement.style.setProperty("--top-h", top.offsetHeight + "px");
+  setTop();
+  if (window.ResizeObserver) new ResizeObserver(setTop).observe(top); else window.addEventListener("resize", setTop);
+  // modal + card
+  $("#ovl").addEventListener("click", e => { if (e.target.id === "ovl" || e.target.closest("[data-close]")) closeModal(); });
+  $("#rcOvl").addEventListener("click", e => { if (e.target.id === "rcOvl") closeRecipeCard(); });
+  window.addEventListener("resize", () => { if (!$("#rcOvl").hidden) fitRecipeCard(); });
+  document.addEventListener("keydown", e => {
+    if (e.key !== "Escape") return;
+    if (!$("#rcOvl").hidden) { closeRecipeCard(); e.preventDefault(); }
+    else if (!$("#ovl").hidden) { closeModal(); e.preventDefault(); }
+  });
+  // team
+  $("#teamForm").addEventListener("submit", addChef);
+  // inventory
+  document.querySelectorAll("#invTabs button").forEach(b => b.addEventListener("click", () => { inv.tab = b.dataset.t; paintInv(); }));
+  $("#invSearch").addEventListener("input", e => { inv.search = e.target.value; paintInvItems(invItems()); });
+  $("#invAdd").addEventListener("click", () => editItem(null));
+  $("#moveForm").addEventListener("submit", submitMove);
+  $("#mItem").addEventListener("change", () => { const it = itemById($("#mItem").value); if (it) $("#mUnit").value = it.unit || ""; paintMovePreview(); });
+  ["#mQty", "#mUnit"].forEach(s => $(s).addEventListener("input", paintMovePreview));
+  $("#secRange").addEventListener("change", e => { inv.range = e.target.value; paintSections(); });
+  $("#secForm").addEventListener("submit", e => {
+    e.preventDefault();
+    const v = $("#secNew").value.trim(); if (!v) return;
+    const s = sections(); if (s.some(x => normKey(x) === normKey(v))) { toast("این بخش هست.", "err"); return; }
+    setSetting("sections", s.concat([v])); $("#secNew").value = ""; paintSections();
+  });
+  $("#scanAll").addEventListener("click", async () => {
+    const list = scanCandidates().filter(g => !g.simItems.length && !g.simCands.length);
+    if (!list.length) return;
+    const ok = await confirmBox("ثبت گروهی", faNum(list.length) + " ماده به‌عنوان کالای انبار ثبت شود؟ موارد مشابه (احتمال تکرار) جدا می‌مانند تا خودت تصمیم بگیری.", "ثبت همه", false);
+    if (!ok) return;
+    list.forEach(newItemFromCandidate);
+    toast(faNum(list.length) + " کالا ثبت شد.", "ok", 2400); paintInv();
+  });
+  // waste
+  $("#wasteForm").addEventListener("submit", submitWaste);
+  ["#wGross", "#wNet", "#wUnit", "#wItem"].forEach(s => $(s).addEventListener("input", paintWasteCalc));
+  $("#wFilter").addEventListener("input", e => { wf.filter = e.target.value; paintWaste(); });
+  // counter
+  $("#ctrNew").addEventListener("click", newTicket);
+  $("#ctrClose").addEventListener("click", closeDay);
+  $("#ctrDayStart").addEventListener("change", e => { setSetting("day_start", Number(e.target.value)); paintCounter(); });
+  // react to chef changes in other modules
+  $("#chefSel").addEventListener("change", () => { if (state.mod === "team") paintTeam(); });
+  // other tabs/devices writing to the same browser storage
+  window.addEventListener("storage", e => { if (e.key === LS_V2) toast("اطلاعات در تب دیگری تغییر کرد؛ برای دیدن آخرین وضعیت صفحه را دوباره باز کن.", "info", 5000); });
+}
+
 (function init() {
   state.activeChef = lsGet("sosisas.kitchen.activeChef") || "";
+  restoreDrafts();
   bind();
+  bindV2();
   renderTeam();
   renderWorkspace();
+  setMod(lsGet("sosisas.kitchen.mod") || "recipes");
+  paintPending();
   loadAll(true);
 })();
 </script>
